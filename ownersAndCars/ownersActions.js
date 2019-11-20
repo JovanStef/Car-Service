@@ -1,4 +1,4 @@
-const ownersQuerys = require('./ownersQuerys');
+const ownersQuerys = require('./ownersQueries');
 
 getAllOwners =async(req,res)=>{
     try{
