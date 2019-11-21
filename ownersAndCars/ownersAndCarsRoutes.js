@@ -7,7 +7,10 @@ const carActions = require('./carsActions');
 let routes = express.Router();
 
 routes.get('/owners',ownerActions.getAllOwners);
-routes.get('/cars',carActions.getAllCars);
+routes.post('/owners',ownerActions.addNewOwner);
 
-module.exports = 
-    routes
+routes.get('/cars',carActions.getAllCars);
+routes.post('/cars',carActions.addNewCar);
+
+
+module.exports = routes

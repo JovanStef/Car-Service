@@ -11,7 +11,19 @@ getAllParts =async(req,res)=>{
     }
 };
 
+addNewPart =async(req,res)=>{
+    try{
+        let newPart = await partsQuerys.addNewPartQuery(req.body);
+        res.status(200).send('New part added!');
+    }
+    catch (error){
+        res.status(500).send(error.message);
+
+    }
+};
+
 module.exports = {
-    getAllParts
+    getAllParts,
+    addNewPart
 
 }
