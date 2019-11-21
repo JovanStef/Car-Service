@@ -28,7 +28,26 @@ addNewServShQuery = (request) => {
         });
     });
 };
+
+updateServShQuery = (id,request) => {
+    const query = "UPDATE service_sheet SET Date_Time = NOW(), Cost = ? WHERE Service_S_ID=?;";
+    return new Promise((resolve, reject) => {
+        connectDB.query(query, [request.Cost, id], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                if(results.affectedRows == 0){
+                    reject(`Service sheet with ID ${id} does not exist!`)
+                }
+
+                resolve(results);
+            }
+        });
+    });
+};
 module.exports={
     getAllServShQuery,
-    addNewServShQuery
+    addNewServShQuery,
+    updateServShQuery
 }

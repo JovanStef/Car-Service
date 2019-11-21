@@ -22,8 +22,20 @@ addNewServSh = async (req, res) => {
     }
 };
 
+updateServSh = async (req, res) => {
+    try {
+        let ServSh = await servShQuerys.updateServShQuery(req.params.cost,req.body);
+        res.status(200).send('Service sheet updated!');
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+
+    }
+};
+
 module.exports = {
     getAllServSh,
-    addNewServSh
+    addNewServSh,
+    updateServSh
 
 }
