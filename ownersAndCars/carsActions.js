@@ -1,4 +1,5 @@
 const carsQuerys = require('./carsQueries');
+const {Owner,Car} = require('../models')
 
 getAllCars =async(req,res)=>{
     try{

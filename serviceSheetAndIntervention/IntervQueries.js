@@ -38,7 +38,8 @@ updateIntervQuery = (request,id) => {
             }
             else {
                 if(results.affectedRows == 0){
-                    reject(`Intervention for Service Sheet with ID ${id} does not exist!`)
+                    message = `Intervention for Service Sheet with ID ${id} does not exist!`
+                    reject({message:message})
                 }
 
                 resolve(results);

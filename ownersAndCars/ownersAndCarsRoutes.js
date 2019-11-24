@@ -7,6 +7,7 @@ const carActions = require('./carsActions');
 let routes = express.Router();
 
 routes.get('/owners',ownerActions.getAllOwners);
+routes.get('/owners/data',ownerActions.getAllDataForOwners);
 routes.post('/owners',ownerActions.addNewOwner);
 
 routes.get('/cars',carActions.getAllCars);
