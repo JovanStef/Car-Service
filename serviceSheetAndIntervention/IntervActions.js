@@ -1,9 +1,11 @@
 const intervQuerys = require('./IntervQueries');
+const helpers = require('../helpers')
 
 getAllInterv = async (req, res) => {
     try {
-        let allInterv = await intervQuerys.getAllIntervQuery();
-        res.status(200).send(allInterv);
+            let allInterv = await intervQuerys.getAllIntervQuery();
+            res.status(200).send(allInterv);
+        
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -13,8 +15,14 @@ getAllInterv = async (req, res) => {
 
 addNewInterv = async (req, res) => {
     try {
+        // if(!helpers.keyWordValidator(req.body.Inter_Type)){
+        //     res.status(401).send(`Please set proper Inter_Type - invalid ${req.body.Inter_Type}`);
+
+        // }else{
+            // helpers.keyWordValidator(req.body);
         let newInterv = await intervQuerys.addNewIntervQuery(req.body);
         res.status(200).send('New intervention added!');
+        // }
     }
     catch (error) {
         res.status(500).send(error.message);

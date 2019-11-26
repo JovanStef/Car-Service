@@ -5,10 +5,10 @@ const helpers = require('../helpers');
 getAllOwners =async(req,res)=>{
     try{
         let allOwners = await ownersQuerys.getAllOwnersQuery();
-        let owners = new Owner(allOwners);
-        let listOwners = owners.toJson();
-        console.log(allOwners)
-        res.status(200).send(listOwners);
+        let owner = new Owner(allOwners)
+        let owners = owner.toJson()
+        console.log(owners)
+        res.status(200).send(owners);
     }
     catch (error){
         res.status(500).send(error.message);
@@ -16,11 +16,16 @@ getAllOwners =async(req,res)=>{
     }
 };
 
-getAllDataForOwners =async(req,res)=>{
+getAllDataForOwnerID =async(req,res)=>{
     try{
-        let allDataOwners = await ownersQuerys.getAllDataForOwnersQuery();
-        let data = helpers.ownersDataJSON(allDataOwners)
-         res.status(200).send(data);
+        let allDataOwners = await ownersQuerys.getAllDataForOwnerIDQuery(req.body.password);
+        if(allDataOwners.length == 0){
+            res.redirect('/cars')
+            // res.status(401).send('Please provide a valid password');
+        }else{
+            let data = helpers.ownersDataJSON(allDataOwners);
+            res.status(200).send(data);
+        }
     }
     catch (error){
         res.status(500).send(error.message);
@@ -42,6 +47,6 @@ addNewOwner =async(req,res)=>{
 module.exports = {
     getAllOwners,
     addNewOwner,
-    getAllDataForOwners
+    getAllDataForOwnerID
 
 }

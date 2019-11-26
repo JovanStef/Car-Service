@@ -14,7 +14,7 @@ class Owner {
             }
             this.arr.push(temp);
         });
-        return this.arr[0]
+        return this.arr
     };
 };
 
