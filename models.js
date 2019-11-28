@@ -5,7 +5,7 @@ class Owner {
         this.name = obj.Name;
         this.email = obj.email;
     };
-    toJson() {
+    toJson(){
         this.arr = [];
         this.obj.forEach(obj => {
             var temp = {
@@ -80,7 +80,6 @@ class Mechanic {
         this.MechID = obj.Mech_ID;
         this.MechName = obj.Mech_Name;
         this.MechType = obj.Mech_Type;
-        this.MechtoCar_ID = obj.Mech_toCar_ID;
         this.MechtoInter_ID = obj.Mech_toInter_ID;
     };
 };
@@ -91,7 +90,6 @@ class Part {
         this.Part_ID = obj.Part_ID;
         this.Part_SerialNo = obj.Part_SerialNo;
         this.Part_Type = obj.Part_Type;
-        this.Part_toCar_ID = obj.Part_toCar_ID;
         this.Part_toInter_ID = obj.Part_toInter_ID;
     };
 };

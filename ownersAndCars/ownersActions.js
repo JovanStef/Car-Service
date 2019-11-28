@@ -44,9 +44,21 @@ addNewOwner =async(req,res)=>{
     }
 };
 
+softDeleteAllDataForOwnerID =async(req,res)=>{
+    try{
+        let ownerDataToDelete = await ownersQuerys.softDeleteOwnerDataQuery(req.body.owner_id);
+        res.status(200).send(`Owner with ID ${req.body.owner_id} deleted`);
+    }
+    catch (error){
+        res.status(500).send(error.message);
+
+    }
+};
+
 module.exports = {
     getAllOwners,
     addNewOwner,
-    getAllDataForOwnerID
+    getAllDataForOwnerID,
+    softDeleteAllDataForOwnerID
 
 }

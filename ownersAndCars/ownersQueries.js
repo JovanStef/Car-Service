@@ -46,8 +46,24 @@ addNewOwnerQuery = (request) => {
         });
     });
 };
+
+softDeleteOwnerDataQuery = (id)=>{
+const query = "UPDATE owner,car,service_sheet,intervention,mechanic,parts SET owner.Owner_delete=1 ,car.Car_delete = 1, service_sheet.Service_S_delete = 1 , intervention.Inter_delete = 1 , mechanic.Mech_delete = 1, parts.Part_delete = 1 WHERE owner.Owner_ID = ? AND car.Car_toOwner_ID=owner.Owner_ID AND car.Car_ID=service_sheet.Service_toCar_ID AND service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID AND intervention.Inter_ID=mechanic.Mech_toInter_ID AND intervention.Inter_ID=parts.Part_toInter_ID; ";
+return new Promise((resolve, reject) => {
+    connectDB.query(query, [id], (error, results, fields) => {
+        if (error) {
+            reject(error);
+        }
+        else {
+
+            resolve(results);
+        }
+    });
+});
+};
 module.exports={
     getAllOwnersQuery,
     addNewOwnerQuery,
-    getAllDataForOwnerIDQuery
+    getAllDataForOwnerIDQuery,
+    softDeleteOwnerDataQuery
 }

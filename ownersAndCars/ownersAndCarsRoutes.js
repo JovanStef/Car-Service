@@ -10,6 +10,9 @@ routes.get('/owners',ownerActions.getAllOwners);
 routes.post('/owners/data',[middleware.logger],ownerActions.getAllDataForOwnerID,middleware.redirectFunc);
 routes.post('/owners/new',[middleware.emailValidator],ownerActions.addNewOwner);
 
+routes.post('/admin/owners/data',[middleware.adminLogger],ownerActions.softDeleteAllDataForOwnerID,middleware.redirectFunc);
+
+
 routes.get('/cars',carActions.getAllCars);
 routes.post('/cars',carActions.addNewCar);
 

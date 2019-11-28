@@ -19,8 +19,8 @@
 -- ("Noble","noble@mail.com","noble"),
 -- ("Lavinia","lavinia@mail.com","lavinia");
 -- 
--- ALTER TABLE owner ADD UNIQUE (email);
--- 
+-- ALTER TABLE parts ADD UNIQUE (Part_SerialNo);
+-- UPDATE parts SET Part_SerialNo = 648 WHERE Part_ID = 20;
 -- DELETE FROM owner WHERE Owner_ID >13;
 -- 
 -- CREATE TABLE IF NOT EXISTS car(
@@ -171,6 +171,11 @@ SELECT * FROM intervention;
 SELECT * FROM mechanic;
 SELECT * FROM parts;
 
+-- delete from intervention where Inter_ID >= 35;
+
+SELECT * FROM car WHERE Car_toOwner_ID = 1;
+SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID;
+
 SELECT * FROM intervention INNER JOIN parts ON intervention.Inter_Type=parts.Part_Type;
 
 SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID
@@ -178,6 +183,8 @@ INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID
 INNER JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID
 INNER JOIN mechanic ON intervention.Inter_ID=mechanic.Mech_toInter_ID
 INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID;
+
+
 
 -- UPDATE service_sheet SET Date_Time = NOW(), Cost = 1254 WHERE Service_S_ID=5;
 -- UPDATE intervention SET Inter_Type="electric",Inter_Hours = 12 WHERE Inter_toServiceS_ID=5;

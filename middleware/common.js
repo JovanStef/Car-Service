@@ -5,7 +5,10 @@ logger = (req, res, next) => {
     console.log(`Logged ${req.url} ${req.method} --${new Date()}`)
     next()
 };
-
+adminLogger = (req, res, next) => {
+    console.log(`ADMIN ${req.url} ${req.method} --${new Date()}`)
+    next()
+};
 errorHandler = (err, req, res, next) => {
     var errObj = {
         status: err.status,
@@ -36,7 +39,7 @@ redirectFunc = (req, res, next) => {
 keyWord = (req, res, next) => {
     console.log(req.body)
     if (!helpers.keyWordValidator(req.body)) {
-        var error = new Error('Wrong value for property \"type\"');
+        var error = new Error('Wrong value for property "type"');
         error.status = 404;
         next(error)
     }
@@ -49,5 +52,6 @@ module.exports = {
     errorWrongRoute,
     emailValidator,
     redirectFunc,
-    keyWord
+    keyWord,
+    adminLogger
 }

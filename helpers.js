@@ -8,15 +8,6 @@ ownersDataJSON = (obj) => {
   let interv = new Intervention(obj);
   let mech = new Mechanic(obj);
   let part = new Part(obj);
-  // console.log(obj)
-
-  // removeDuplicates = (arr,prop)=>{
-  //      arr1 = arr.filter((elem, index, self) => index === self.findIndex((t) => (
-  //          t.prop === elem.prop 
-  //          ))
-  //          );
-  //     return arr1
-  // }
   let parts = [];
   obj.forEach((obj, index) => {
     temp = {
@@ -118,12 +109,14 @@ emailValidator = (email) => {
 };
 
 keyWordValidator = (obj) => {
-  let props = ["Inter_Type", "Mech_Type", "Part_Type"];
+  let props = Object.values(obj).map(elem => {
+    return elem.toString().toLowerCase()
+  });
   let keyWords = ["mechanic", "bodywork", "electric"];
   let bool = props.some(prop => {
     let word = keyWords.find(word => {
-      console.log(obj[prop],word)
-      if (obj[prop] == word) {
+      console.log(prop, word)
+      if (prop == word) {
         return true
       } else {
         return false
