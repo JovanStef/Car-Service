@@ -1,4 +1,5 @@
 const ownersQuerys = require('./ownersQueries');
+const operatorQuerys =require('../operators/operatorQueries');
 const {Owner} = require('../models');
 const helpers = require('../helpers');
 const middleware = require('../middleware/common')
@@ -58,16 +59,22 @@ softDeleteAllDataForOwnerID =async(req,res)=>{
     }
 };
 
-loginOwner=async(req,res)=>{
+login=async(req,res)=>{
     let pass = req.body.password;
     let email = req.body.email;
     const header = req.headers['authorization']
     try {
+        let owner
+        let operatorCredentials = await operatorQuerys.getOperatorCredentials(pass,email);
         let ownerCredentials = await ownersQuerys.getOwnerCredentials(pass,email);
-        let owner = ownerCredentials[0];
+        console.log(operatorCredentials)
+        if(operatorCredentials.length == 0){
+            owner=ownerCredentials;
+        }else{
+            owner = operatorCredentials
+        }
+        owner = owner[0];
         let role = Object.keys(owner)[0].split('_');
-        console.log(owner.password,pass)
-        console.log(header)
         if (owner.password === pass) {
             var privateKey = 'owner'
             var token = jwt.sign({owner}, privateKey,{ expiresIn: '24h' });
@@ -91,6 +98,6 @@ module.exports = {
     addNewOwner,
     getAllDataForOwnerID,
     softDeleteAllDataForOwnerID,
-    loginOwner
+    login
 
 }

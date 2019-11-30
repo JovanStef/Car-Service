@@ -38,7 +38,6 @@ redirectFunc = (req, res, next) => {
 };
 
 keyWord = (req, res, next) => {
-    console.log(req.body)
     if (!helpers.keyWordValidator(req.body)) {
         var error = new Error('Wrong value for property "type"');
         error.status = 404;
@@ -56,26 +55,42 @@ checkToken = (req, res, next) => {
         req.token = token;
         next();
     } else {
-        //If header is undefined return Forbidden (403)
         res.sendStatus(403)
     }
 }
 verifyToken = (req, res,next) => {
     jwt.verify(req.token, 'owner', (err, authorizedData) => {
         if(err){
-            console.log('ERROR: Could not connect to the protected route');
-            res.sendStatus(403);
+            res.status(403).send('Invalid roken');
         } else {
-            // res.json({
-            //     message: 'Successful log in',
-            //     authorizedData
-            // });
-            console.log('SUCCESS: Connected to protected route');
             next()
         }
     })
 }
 
+checkRoleOwner = (req,res,next)=>{
+    jwt.verify(req.token, 'owner', (err, authorizedData) => {
+        let keyWord = Object.keys(authorizedData.owner)[0].split('_')
+    if (keyWord[0] != 'Owner') {
+        res.status(403).send('Invalid authorisation');;
+    }
+    else {
+        next();
+    }
+});
+};
+
+checkRoleOperator = (req,res,next)=>{
+    jwt.verify(req.token, 'owner', (err, authorizedData) => {
+        let keyWord = Object.keys(authorizedData.owner)[0].split('_');
+    if (keyWord[0] != 'Operator') {
+        res.status(403).send('Invalid authorisation');;
+    }
+    else {
+        next();
+    }
+});
+};
 module.exports = {
     logger,
     errorHandler,
@@ -85,5 +100,7 @@ module.exports = {
     keyWord,
     adminLogger,
     checkToken,
-    verifyToken
+    verifyToken,
+    checkRoleOwner,
+    checkRoleOperator
 }

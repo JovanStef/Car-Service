@@ -6,13 +6,13 @@ const carActions = require('./carsActions');
 
 let routes = express.Router();
 
-routes.get('/owners',ownerActions.getAllOwners);
-routes.post('/login/owners',[middleware.checkToken,middleware.verifyToken],ownerActions.loginOwner);
+routes.get('/owners',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],ownerActions.getAllOwners);
+routes.post('/login',[middleware.checkToken,middleware.verifyToken],ownerActions.login);
 
-routes.post('/owners/data',[middleware.logger,middleware.checkToken,middleware.verifyToken],ownerActions.getAllDataForOwnerID);
+routes.post('/owners/data',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOwner],ownerActions.getAllDataForOwnerID);
 routes.post('/owners/new',[middleware.emailValidator],ownerActions.addNewOwner);
 
-routes.post('/admin/owners/data',[middleware.adminLogger],ownerActions.softDeleteAllDataForOwnerID,middleware.redirectFunc);
+routes.post('/admin/owners/data',[middleware.checkRoleOperator],ownerActions.softDeleteAllDataForOwnerID,middleware.redirectFunc);
 
 
 routes.get('/cars',carActions.getAllCars);
