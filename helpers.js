@@ -18,7 +18,7 @@ ownersDataJSON = (obj) => {
     parts.push(temp);
   });
   parts = parts.filter((elem, index, self) => index === self.findIndex((i) => (
-    i.Part_ID === elem.Part_ID
+    i.PartID === elem.PartID
   ))
   );
 
@@ -90,6 +90,7 @@ ownersDataJSON = (obj) => {
   ))
   );
   let ownerData = {
+    ID:owner.ownerID,
     Name: owner.name,
     Email: owner.email,
     Cars: carsList
@@ -143,8 +144,16 @@ keyWordValidator = (obj) => {
   //   return bool
 };
 
+responseError = (obj,resVar,message)=>{
+  if(obj.affectedRows == 0 || resVar.length == 0){
+    return message
+  }
+
+}
+
 module.exports = {
   ownersDataJSON,
   emailValidator,
-  keyWordValidator
+  keyWordValidator,
+  responseError
 };

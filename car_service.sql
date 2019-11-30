@@ -163,6 +163,7 @@ ALTER TABLE service_sheet ADD COLUMN assessment_fee INT NOT NULL DEFAULT 300;
 -- (FLOOR(RAND()*(800-100+1))+100,"electric",FLOOR(RAND()*(25-1+1))+1,FLOOR(RAND()*(18-1+1))+1),
 -- (FLOOR(RAND()*(800-100+1))+100,"mechanic",FLOOR(RAND()*(25-1+1))+1,FLOOR(RAND()*(18-1+1))+1),
 -- (FLOOR(RAND()*(800-100+1))+100,"electric",FLOOR(RAND()*(25-1+1))+1,FLOOR(RAND()*(18-1+1))+1);
+UPDATE parts SET Part_toInter_ID = 1 WHERE Part_ID=2;
 
 SELECT * FROM car;
 SELECT * FROM service_sheet;
@@ -170,6 +171,16 @@ SELECT * FROM owner;
 SELECT * FROM intervention;
 SELECT * FROM mechanic;
 SELECT * FROM parts;
+
+-- UPDATE owner,car,service_sheet,intervention,mechanic,parts
+-- SET owner.Owner_delete=1 ,car.Car_delete = 1, service_sheet.Service_S_delete = 1 , intervention.Inter_delete = 1 , mechanic.Mech_delete = 1, parts.Part_delete = 1
+-- WHERE owner.Owner_ID = 1
+-- AND car.Car_toOwner_ID=owner.Owner_ID
+-- AND car.Car_ID=service_sheet.Service_toCar_ID
+-- AND service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID
+-- AND intervention.Inter_ID=mechanic.Mech_toInter_ID
+-- AND intervention.Inter_ID=parts.Part_toInter_ID;
+
 
 -- delete from intervention where Inter_ID >= 35;
 
@@ -182,9 +193,9 @@ SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID
 INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID
 INNER JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID
 INNER JOIN mechanic ON intervention.Inter_ID=mechanic.Mech_toInter_ID
-INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID;
+INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID WHERE owner.Owner_ID=1;
 
-
+SELECT * FROM intervention INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID WHERE intervention.Inter_ID=1;
 
 -- UPDATE service_sheet SET Date_Time = NOW(), Cost = 1254 WHERE Service_S_ID=5;
 -- UPDATE intervention SET Inter_Type="electric",Inter_Hours = 12 WHERE Inter_toServiceS_ID=5;
