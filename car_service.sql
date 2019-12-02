@@ -1,3 +1,14 @@
+-- CREATE TABLE IF NOT EXISTS operator(
+-- Operator_ID INT AUTO_INCREMENT PRIMARY KEY,
+-- Name VARCHAR(255) NOT NULL,
+-- email VARCHAR(255) NOT NULL,
+-- password VARCHAR(255) NOT NULL DEFAULT "password"
+-- );
+-- 
+-- INSERT INTO operator (Name, email, password)
+-- VAlUES("Operator_1","operator@mail.com","operator");
+
+
 -- CREATE TABLE IF NOT EXISTS owner(
 -- Owner_ID INT AUTO_INCREMENT PRIMARY KEY,
 -- Name VARCHAR(255) NOT NULL,
@@ -120,7 +131,9 @@
 -- ("mechanic",FLOOR(RAND()*(8-1+1))+1,14),
 -- ("electric",FLOOR(RAND()*(8-1+1))+1,6),
 -- ("mechanic",FLOOR(RAND()*(8-1+1))+1,1);
-ALTER TABLE service_sheet ADD COLUMN assessment_fee INT NOT NULL DEFAULT 300;
+
+ALTER TABLE intervention ADD COLUMN description VARCHAR(255) NOT NULL DEFAULT "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.";
+-- ALTER TABLE service_sheet ADD COLUMN assessment_fee INT NOT NULL DEFAULT 300;
 
 
 -- CREATE TABLE IF NOT EXISTS mechanic (
@@ -163,8 +176,9 @@ ALTER TABLE service_sheet ADD COLUMN assessment_fee INT NOT NULL DEFAULT 300;
 -- (FLOOR(RAND()*(800-100+1))+100,"electric",FLOOR(RAND()*(25-1+1))+1,FLOOR(RAND()*(18-1+1))+1),
 -- (FLOOR(RAND()*(800-100+1))+100,"mechanic",FLOOR(RAND()*(25-1+1))+1,FLOOR(RAND()*(18-1+1))+1),
 -- (FLOOR(RAND()*(800-100+1))+100,"electric",FLOOR(RAND()*(25-1+1))+1,FLOOR(RAND()*(18-1+1))+1);
-UPDATE parts SET Part_toInter_ID = 1 WHERE Part_ID=2;
+-- UPDATE parts SET Part_toInter_ID = 1 WHERE Part_ID=2;
 
+SELECT * FROM operator;
 SELECT * FROM car;
 SELECT * FROM service_sheet;
 SELECT * FROM owner;
@@ -182,7 +196,7 @@ SELECT * FROM parts;
 -- AND intervention.Inter_ID=parts.Part_toInter_ID;
 
 
--- delete from intervention where Inter_ID >= 35;
+delete from owner where Owner_ID = 20;
 
 SELECT * FROM car WHERE Car_toOwner_ID = 1;
 SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID;

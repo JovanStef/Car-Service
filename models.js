@@ -1,13 +1,13 @@
 class Owner {
     constructor(obj) {
-        this.obj = obj;
+        // this.obj = obj;
         this.ownerID = obj.Owner_ID;
         this.name = obj.Name;
         this.email = obj.email;
     };
     toJson(){
         this.arr = [];
-        this.obj.forEach(obj => {
+        obj.forEach(obj => {
             var temp = {
                 Owner_Name: obj.Name,
                 Owner_Email: obj.email,

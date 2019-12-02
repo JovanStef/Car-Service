@@ -13,7 +13,7 @@ const app = express();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
-app.use(jwt({ secret: 'owner'}).unless({path: ['/login/owners']}));
+app.use(jwt({ secret: 'owner'}).unless({path: ['/login']}));
 
 
 app.get('/', (req, res)=> {

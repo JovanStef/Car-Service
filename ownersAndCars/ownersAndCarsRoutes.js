@@ -7,7 +7,7 @@ const carActions = require('./carsActions');
 let routes = express.Router();
 
 routes.get('/owners',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],ownerActions.getAllOwners);
-routes.post('/login',[middleware.checkToken,middleware.verifyToken],ownerActions.login);
+routes.post('/login',ownerActions.login);
 
 routes.post('/owners/data',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOwner],ownerActions.getAllDataForOwnerID);
 routes.post('/owners/new',[middleware.emailValidator],ownerActions.addNewOwner);

@@ -1,4 +1,6 @@
 const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('./models');
+var jwt = require('jsonwebtoken');
+
 
 
 ownersDataJSON = (obj) => {
@@ -151,9 +153,38 @@ responseError = (obj,resVar,message)=>{
 
 }
 
+logginRoleDesc = (user,operator,owner,pass)=>{
+  if(operator.length != 0){
+    user=operator;
+}else if(owner.length != 0){
+    user = owner
+}else{
+  var error = new Error("wrong credentials");
+  error.status = 404;
+  return error.message
+}
+user = user[0];
+let role = Object.keys(user)[0].split('_');
+if (user.password === pass) {
+    var privateKey = 'owner'
+    var token = jwt.sign({user}, privateKey,{ expiresIn: '24h' });
+    let userToSend = {
+        Name:user.Name,
+        Email:user.email,
+        Token:token,
+        role:role[0]
+    }
+    return userToSend
+} else {
+  return false
+
+}
+}
+
 module.exports = {
   ownersDataJSON,
   emailValidator,
   keyWordValidator,
-  responseError
+  responseError,
+  logginRoleDesc
 };

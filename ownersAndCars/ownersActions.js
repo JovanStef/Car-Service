@@ -1,6 +1,7 @@
 const ownersQuerys = require('./ownersQueries');
 const operatorQuerys =require('../operators/operatorQueries');
-const {Owner} = require('../models');
+const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('../models');
+
 const helpers = require('../helpers');
 const middleware = require('../middleware/common')
 
@@ -10,9 +11,20 @@ var jwt = require('jsonwebtoken');
 getAllOwners =async(req,res)=>{
     try{
         let allOwners = await ownersQuerys.getAllOwnersQuery();
-        let owner = new Owner(allOwners)
-        let owners = owner.toJson()
-        res.status(200).send(owners);
+let ownersTosend=[]
+        allOwners.map(owner=>{
+        temp = {
+            Owner:new Owner(owner),
+            Car:new Car(owner),
+            Service_Sheet:new ServiceSheet(owner),
+            Intervention:new Intervention(owner),
+            Mechanic:new Mechanic(owner),
+            Parts:new Part(owner)
+
+        }
+        ownersTosend.push(temp)
+        })
+        res.status(200).send(ownersTosend);
     }
     catch (error){
         res.status(500).send(error.message);
@@ -62,32 +74,14 @@ softDeleteAllDataForOwnerID =async(req,res)=>{
 login=async(req,res)=>{
     let pass = req.body.password;
     let email = req.body.email;
-    const header = req.headers['authorization']
     try {
-        let owner
+        let user
         let operatorCredentials = await operatorQuerys.getOperatorCredentials(pass,email);
         let ownerCredentials = await ownersQuerys.getOwnerCredentials(pass,email);
-        console.log(operatorCredentials)
-        if(operatorCredentials.length == 0){
-            owner=ownerCredentials;
-        }else{
-            owner = operatorCredentials
-        }
-        owner = owner[0];
-        let role = Object.keys(owner)[0].split('_');
-        if (owner.password === pass) {
-            var privateKey = 'owner'
-            var token = jwt.sign({owner}, privateKey,{ expiresIn: '24h' });
-            let ownerToSend = {
-                Name:owner.Name,
-                Email:owner.email,
-                Token:token,
-                role:role[0]
-            }
-            res.status(200).send(ownerToSend);
-        } else {
-            res.status(401).send('YOU SHALL NOT PASS !!!!');
-        }
+        console.log('operatorCredentials')
+        let bool = helpers.logginRoleDesc(user,operatorCredentials,ownerCredentials,pass);
+        res.send(bool)
+    
     } catch (error) {
         res.status(500).send(error.message);
     }
