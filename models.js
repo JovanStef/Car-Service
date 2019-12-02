@@ -71,6 +71,7 @@ class Intervention {
         this.InterType = obj.Inter_Type;
         this.InterHours = obj.Inter_Hours;
         this.IntertoServiceS_ID = obj.Inter_toServiceS_ID;
+        this.Interv_Description = obj.description;
     };
 };
 

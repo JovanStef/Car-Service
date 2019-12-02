@@ -4,7 +4,7 @@ var jwt = require('jsonwebtoken');
 
 
 ownersDataJSON = (obj) => {
-  let owner = new Owner(obj[0]);
+  let owner = new Owner(obj);
   let car = new Car(obj);
   let servSh = new ServiceSheet(obj);
   let interv = new Intervention(obj);
@@ -23,7 +23,6 @@ ownersDataJSON = (obj) => {
     i.PartID === elem.PartID
   ))
   );
-
   let mechList = [];
   obj.forEach((obj, index) => {
     temp = {
@@ -34,70 +33,86 @@ ownersDataJSON = (obj) => {
     }
     mechList.push(temp);
   });
-
-  // mechList= removeDuplicates(mechList,'Mech_ID')
+  
   mechList = mechList.filter((elem, index, self) =>
-    index === self.findIndex((i) => (
-      i.MechanicID === elem.MechanicID
+  index === self.findIndex((i) => (
+    i.MechanicID === elem.MechanicID
     ))
-  );
+    );
+    
+    let intervList = [];
+    obj.forEach((obj, index) => {
+      temp = {
+        IterventionID: interv.obj[index].Inter_ID,
+        Type: interv.obj[index].Inter_Type,
+        Hours: interv.obj[index].Inter_Hours,
+        Description:interv.obj[index].description,
+        Mechanics: mechList
+      }
+      intervList.push(temp);
+      
+    });
+    
+    intervList = intervList.filter((elem, index, self) => index === self.findIndex((i) => (
+      i.IterventionID === elem.IterventionID
+      ))
+      );
+      
+      let sSheetsList = []
+      obj.forEach((obj, index) => {
+        
+        temp = {
+          SheetID: servSh.obj[index].Service_S_ID,
+          Number: servSh.obj[index].Service_S_Num,
+          DateTime: servSh.obj[index].Date_Time,
+          Cost: servSh.obj[index].Cost,
+          Intreventions: intervList
+        }
+        sSheetsList.push(temp)
+        
+      });
+      sSheetsList = sSheetsList.filter((elem, index, self) => index === self.findIndex((i) => (
+        i.SheetID === elem.SheetID
+        ))
+        );
+        let carsList = []
+        obj.forEach((obj, index) => {
+          temp = {
+            CarID: car.obj[index].Car_ID,
+            Make: car.obj[index].Make,
+            Model: car.obj[index].Model,
+            Year: car.obj[index].Year,
+            ServiceSheet: sSheetsList
+          }
+          carsList.push(temp)
+        });
+        carsList = carsList.filter((elem, index, self) => index === self.findIndex((i) => (
+          i.CarID === elem.CarID
+          ))
+          );
+          let ownerList = []
+          
+          obj.forEach((obj,index)=>{
+            temp = {
+              ownerID:obj.Owner_ID,
+              Name: obj.Name,
+              Email: obj.email,
+              Cars: carsList
+            }
+            ownerList.push(temp)
+          })
+          ownerList = ownerList.filter((elem, index, self) => index === self.findIndex((i) => (
+            i.ownerID === elem.ownerID
+            ))
+            );
 
-  let intervList = [];
-  obj.forEach((obj, index) => {
-    temp = {
-      IterventionID: interv.obj[index].Inter_ID,
-      Type: interv.obj[index].Inter_Type,
-      Hours: interv.obj[index].Inter_Hours,
-      Mechanics: mechList
-    }
-    intervList.push(temp);
-
-  });
-
-  intervList = intervList.filter((elem, index, self) => index === self.findIndex((i) => (
-    i.IterventionID === elem.IterventionID
-  ))
-  );
-
-  let sSheetsList = []
-  obj.forEach((obj, index) => {
-
-    temp = {
-      SheetID: servSh.obj[index].Service_S_ID,
-      Number: servSh.obj[index].Service_S_Num,
-      DateTime: servSh.obj[index].Date_Time,
-      Cost: servSh.obj[index].Cost,
-      Intreventions: intervList
-    }
-    sSheetsList.push(temp)
-
-  });
-  sSheetsList = sSheetsList.filter((elem, index, self) => index === self.findIndex((i) => (
-    i.SheetID === elem.SheetID
-  ))
-  );
-  let carsList = []
-  obj.forEach((obj, index) => {
-    temp = {
-      CarID: car.obj[index].Car_ID,
-      Make: car.obj[index].Make,
-      Model: car.obj[index].Model,
-      Year: car.obj[index].Year,
-      ServiceSheet: sSheetsList
-    }
-    carsList.push(temp)
-  });
-  carsList = carsList.filter((elem, index, self) => index === self.findIndex((i) => (
-    i.CarID === elem.CarID
-  ))
-  );
   let ownerData = {
     ID:owner.ownerID,
     Name: owner.name,
     Email: owner.email,
     Cars: carsList
   }
-  return ownerData
+  return ownerList
 };
 
 emailValidator = (email) => {

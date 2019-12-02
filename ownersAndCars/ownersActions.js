@@ -10,21 +10,9 @@ var jwt = require('jsonwebtoken');
 
 getAllOwners =async(req,res)=>{
     try{
-        let allOwners = await ownersQuerys.getAllOwnersQuery();
-let ownersTosend=[]
-        allOwners.map(owner=>{
-        temp = {
-            Owner:new Owner(owner),
-            Car:new Car(owner),
-            Service_Sheet:new ServiceSheet(owner),
-            Intervention:new Intervention(owner),
-            Mechanic:new Mechanic(owner),
-            Parts:new Part(owner)
-
-        }
-        ownersTosend.push(temp)
-        })
-        res.status(200).send(ownersTosend);
+        let owner = await ownersQuerys.getAllOwnersQuery(req.body.email);
+        let data = helpers.ownersDataJSON(owner);
+         res.status(200).send(data);
     }
     catch (error){
         res.status(500).send(error.message);
@@ -34,7 +22,10 @@ let ownersTosend=[]
 
 getAllDataForOwnerID =async(req,res)=>{
     try{
-        let allDataOwners = await ownersQuerys.getAllDataForOwnerIDQuery(req.body.password,req.body.email);
+        let tokenData = jwt.verify(req.token, 'owner', (err, authorizedData) => {
+            return authorizedData
+        })
+        let allDataOwners = await ownersQuerys.getAllDataForOwnerIDQuery(tokenData.user.password,tokenData.user.email);
         let resErr = helpers.responseError(res,allDataOwners,'Please check your credentials')
         if(resErr){
             res.status(401).send(resErr);
