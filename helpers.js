@@ -15,7 +15,8 @@ ownersDataJSON = (obj) => {
     temp = {
       PartID: part.obj[index].Part_ID,
       Name: part.obj[index].Part_SerialNo,
-      Type: part.obj[index].Part_Type
+      Type: part.obj[index].Part_Type,
+      Deleted:part.obj[index].Part_delete,
     }
     parts.push(temp);
   });
@@ -29,6 +30,7 @@ ownersDataJSON = (obj) => {
       MechanicID: mech.obj[index].Mech_ID,
       Name: mech.obj[index].Mech_Name,
       Type: mech.obj[index].Mech_Type,
+      Deleted:mech.obj[index].Mech_delete,
       Parts: parts
     }
     mechList.push(temp);
@@ -47,6 +49,7 @@ ownersDataJSON = (obj) => {
         Type: interv.obj[index].Inter_Type,
         Hours: interv.obj[index].Inter_Hours,
         Description:interv.obj[index].description,
+        Deleted:interv.obj[index].Inter_delete,
         Mechanics: mechList
       }
       intervList.push(temp);
@@ -66,6 +69,7 @@ ownersDataJSON = (obj) => {
           Number: servSh.obj[index].Service_S_Num,
           DateTime: servSh.obj[index].Date_Time,
           Cost: servSh.obj[index].Cost,
+          Deleted:servSh.obj[index].Service_S_delete,
           Intreventions: intervList
         }
         sSheetsList.push(temp)
@@ -82,6 +86,7 @@ ownersDataJSON = (obj) => {
             Make: car.obj[index].Make,
             Model: car.obj[index].Model,
             Year: car.obj[index].Year,
+            Deleted:car.obj[index].Car_delete,
             ServiceSheet: sSheetsList
           }
           carsList.push(temp)
@@ -94,9 +99,10 @@ ownersDataJSON = (obj) => {
           
           obj.forEach((obj,index)=>{
             temp = {
-              ownerID:obj.Owner_ID,
-              Name: obj.Name,
-              Email: obj.email,
+              ownerID:owner.obj[index].Owner_ID,
+              Name: owner.obj[index].Name,
+              Email: owner.obj[index].email,
+              Deleted:owner.obj[index].Owner_delete,
               Cars: carsList
             }
             ownerList.push(temp)

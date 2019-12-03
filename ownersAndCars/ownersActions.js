@@ -8,9 +8,9 @@ const middleware = require('../middleware/common')
 var jwt = require('jsonwebtoken');
 
 
-getAllOwners =async(req,res)=>{
+getOwnersByEmail =async(req,res)=>{
     try{
-        let owner = await ownersQuerys.getAllOwnersQuery(req.body.email);
+        let owner = await ownersQuerys.getOwnersByEmailQuery(req.body.email);
         let data = helpers.ownersDataJSON(owner);
          res.status(200).send(data);
     }
@@ -53,8 +53,8 @@ addNewOwner =async(req,res)=>{
 
 softDeleteAllDataForOwnerID =async(req,res)=>{
     try{
-        let ownerDataToDelete = await ownersQuerys.softDeleteOwnerDataQuery(req.body.owner_id);
-        res.status(200).send(`Owner with ID ${req.body.owner_id} deleted`);
+        let ownerDataToDelete = await ownersQuerys.softDeleteOwnerDataQuery(req.body.owner_id,req.body.deleted);
+        res.status(200).send(`Owner with ID ${req.body.owner_id} new deleted value`);
     }
     catch (error){
         res.status(500).send(error.message);
@@ -79,7 +79,7 @@ login=async(req,res)=>{
 }
 
 module.exports = {
-    getAllOwners,
+    getOwnersByEmail,
     addNewOwner,
     getAllDataForOwnerID,
     softDeleteAllDataForOwnerID,

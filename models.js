@@ -1,9 +1,10 @@
 class Owner {
     constructor(obj) {
-        // this.obj = obj;
+        this.obj = obj;
         this.ownerID = obj.Owner_ID;
         this.name = obj.Name;
         this.email = obj.email;
+        this.Owner_delete = obj.Owner_delete;
     };
     toJson(){
         this.arr = [];
@@ -26,6 +27,7 @@ class Car {
         this.Model = obj.Model;
         this.Year = obj.Year;
         this.CartoOwnerID = obj.Car_toOwner_ID;
+        this.Car_delete = obj.Car_delete
     };
     toJson() {
         this.arr = [];
@@ -50,6 +52,7 @@ class ServiceSheet {
         this.Cost = obj.Cost;
         this.Service_toCar_ID = obj.Service_toCar_ID;
         this.assessment_fee = obj.assessment_fee;
+        this.Service_S_delete=obj.Service_S_delete;
     };
     toJson() {
         this.arr = [];
@@ -72,6 +75,7 @@ class Intervention {
         this.InterHours = obj.Inter_Hours;
         this.IntertoServiceS_ID = obj.Inter_toServiceS_ID;
         this.Interv_Description = obj.description;
+        this.Inter_delete = obj.Inter_delete;
     };
 };
 
@@ -82,6 +86,7 @@ class Mechanic {
         this.MechName = obj.Mech_Name;
         this.MechType = obj.Mech_Type;
         this.MechtoInter_ID = obj.Mech_toInter_ID;
+        this.Mech_delete = obj.Mech_delete;
     };
 };
 
@@ -92,6 +97,7 @@ class Part {
         this.Part_SerialNo = obj.Part_SerialNo;
         this.Part_Type = obj.Part_Type;
         this.Part_toInter_ID = obj.Part_toInter_ID;
+        this.Part_delete = obj.Part_delete;
     };
 };
 

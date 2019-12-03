@@ -1,6 +1,6 @@
 const connectDB = require('../database');
 
-getAllOwnersQuery = (email)=>{
+getOwnersByEmailQuery = (email)=>{
     const query = 'SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID\
     INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID\
     INNER JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID\
@@ -64,10 +64,10 @@ addNewOwnerQuery = (request) => {
     });
 };
 
-softDeleteOwnerDataQuery = (id)=>{
-const query = "UPDATE owner,car,service_sheet,intervention,mechanic,parts SET owner.Owner_delete=1 ,car.Car_delete = 1, service_sheet.Service_S_delete = 1 , intervention.Inter_delete = 1 , mechanic.Mech_delete = 1, parts.Part_delete = 1 WHERE owner.Owner_ID = ? AND car.Car_toOwner_ID=owner.Owner_ID AND car.Car_ID=service_sheet.Service_toCar_ID AND service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID AND intervention.Inter_ID=mechanic.Mech_toInter_ID AND intervention.Inter_ID=parts.Part_toInter_ID; ";
+softDeleteOwnerDataQuery = (id,deleted)=>{
+const query = "UPDATE owner,car,service_sheet,intervention,mechanic,parts SET owner.Owner_delete=? ,car.Car_delete = ?, service_sheet.Service_S_delete = ? , intervention.Inter_delete = ? , mechanic.Mech_delete = ?, parts.Part_delete = ? WHERE owner.Owner_ID = ? AND car.Car_toOwner_ID=owner.Owner_ID AND car.Car_ID=service_sheet.Service_toCar_ID AND service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID AND intervention.Inter_ID=mechanic.Mech_toInter_ID AND intervention.Inter_ID=parts.Part_toInter_ID; ";
 return new Promise((resolve, reject) => {
-    connectDB.query(query, [id], (error, results, fields) => {
+    connectDB.query(query, [deleted,deleted,deleted,deleted,deleted,deleted,id], (error, results, fields) => {
         if (error) {
             reject(error);
         }
@@ -79,7 +79,7 @@ return new Promise((resolve, reject) => {
 });
 };
 module.exports={
-    getAllOwnersQuery,
+    getOwnersByEmailQuery,
     addNewOwnerQuery,
     getAllDataForOwnerIDQuery,
     softDeleteOwnerDataQuery,
