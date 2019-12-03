@@ -15,11 +15,6 @@ getAllInterv = async (req, res) => {
 
 addNewInterv = async (req, res) => {
     try {
-        // if(!helpers.keyWordValidator(req.body.Inter_Type)){
-        //     res.status(401).send(`Please set proper Inter_Type - invalid ${req.body.Inter_Type}`);
-
-        // }else{
-            // helpers.keyWordValidator(req.body);
         let newInterv = await intervQuerys.addNewIntervQuery(req.body);
         res.status(200).send('New intervention added!');
         // }
@@ -41,9 +36,20 @@ updateInterv = async (req, res) => {
     }
 };
 
+softDeleteInterv = async(req,res)=>{
+    try {
+        let interv = await intervQuerys.softDeleteIntervQuery(req.body.interv_ID,req.body.deleted);
+        res.status(200).send(`Intervention with ID ${req.body.interv_ID} new deleted value`);
+
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+}
+
 module.exports = {
     getAllInterv,
     addNewInterv,
-    updateInterv
+    updateInterv,
+    softDeleteInterv
 
 }

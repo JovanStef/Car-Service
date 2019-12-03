@@ -48,8 +48,23 @@ updateIntervQuery = (request,id) => {
     });
 };
 
+softDeleteIntervQuery = (id,deleted)=>{
+    const query = "UPDATE intervention,mechanic,parts SET intervention.Inter_delete = ? , mechanic.Mech_delete = ?, parts.Part_delete = ? WHERE intervention.Inter_ID = ? AND intervention.Inter_ID=mechanic.Mech_toInter_ID AND intervention.Inter_ID=parts.Part_toInter_ID;";
+    return new Promise((resolve, reject) => {
+        connectDB.query(query, [deleted,deleted,deleted,id], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+    
+                resolve(results);
+            }
+        });
+    });
+    };
 module.exports={
     getAllIntervQuery,
     addNewIntervQuery,
-    updateIntervQuery
+    updateIntervQuery,
+    softDeleteIntervQuery
 }

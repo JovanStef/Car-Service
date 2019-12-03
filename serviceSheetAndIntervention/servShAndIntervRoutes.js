@@ -10,6 +10,8 @@ let routes = express.Router();
 
 routes.get('/interv',IntervActions.getAllInterv);
 routes.post('/interv',[middleware.keyWord],IntervActions.addNewInterv);
+routes.post('/interv/owner',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOwner],IntervActions.softDeleteInterv);
+
 routes.patch('/interv/:interv',IntervActions.updateInterv);
 
 routes.get('/serv-sh',servShActions.getAllServSh);
