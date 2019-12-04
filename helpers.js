@@ -160,9 +160,15 @@ ownersDataJSON = (obj) => {
           Deleted: servSh.obj[index].Service_S_delete,
           Intreventions: intervList
         }
-        elem.ServiceSheet = []
         elem.ServiceSheet.push(temp)
       }
+      // remove non matching FK = PK 
+      elem.ServiceSheet.forEach(ss=>{
+        if(ss.ServToCar !=elem.CarID){
+          elem.ServiceSheet.pop(ss)        
+        }
+      });
+      // remove duplicate entries
       elem.ServiceSheet = elem.ServiceSheet.filter((elem, index, self) => index === self.findIndex((i) => (
         i.SheetID === elem.SheetID
       ))
@@ -175,7 +181,7 @@ ownersDataJSON = (obj) => {
 
         if (interv.obj[index].Inter_toServiceS_ID == sS.SheetID) {
           temp = {
-            IterventionID: interv.obj[index].Inter_ID,
+            InterventionID: interv.obj[index].Inter_ID,
             Type: interv.obj[index].Inter_Type,
             Hours: interv.obj[index].Inter_Hours,
             Description: interv.obj[index].description,
@@ -183,17 +189,50 @@ ownersDataJSON = (obj) => {
             Deleted: interv.obj[index].Inter_delete,
             Mechanics: mechList
           }
-          sS.Intreventions = []
           sS.Intreventions.push(temp)
         }
+        sS.Intreventions.forEach(ii=>{
+          if(ii.IntervToServ !=sS.SheetID){
+            sS.Intreventions.pop(ii)        
+          }
+        });
       })
-      console.log(elem.ServiceSheet[0])
       elem.ServiceSheet[0].Intreventions = elem.ServiceSheet[0].Intreventions.filter((elem, index, self) => index === self.findIndex((i) => (
         i.IterventionID === elem.IterventionID
       ))
       );
     })
   });
+  obj.forEach((obj, index) => {
+  ownerList[0].Cars.forEach((elem, i) => {
+    elem.ServiceSheet.forEach((sS,e) => {
+      
+      console.log(sS.Intreventions[0].InterventionID)
+      if (mech.obj[index].Mech_toInter_ID == sS.Intreventions[e].InterventionID) {
+        temp = {
+          MechanicID: mech.obj[index].Mech_ID,
+          Name: mech.obj[index].Mech_Name,
+          Type: mech.obj[index].Mech_Type,
+          MechToInterv:mech.obj[index].Mech_toInter_ID,
+          Deleted:mech.obj[index].Mech_delete,
+          Parts: parts
+        }
+    sS.Intreventions[e].Mechanics.push(temp);
+  }
+      sS.Intreventions[e].Mechanics.forEach(ii=>{
+              if(ii.MechToInterv !=sS.Intreventions[e].InterventionID){
+                sS.Intreventions[e].Mechanics.pop(ii)        
+              }
+            });
+
+  sS.Intreventions[e].Mechanics = sS.Intreventions[e].Mechanics.filter((elem, index, self) => index === self.findIndex((i) => (
+  i.MechanicID === elem.MechanicID
+))
+);
+})
+    })
+  })
+
 
   return ownerList
 };
