@@ -16,104 +16,8 @@ ownersDataJSON = (obj) => {
   let intervList = [];
   let sSheetsList = []
   let carsList = []
-  let ownerList = []
+  let ownerList = [];
 
-  // obj.forEach((obj, index) => {
-  //   temp = {
-  //     PartID: part.obj[index].Part_ID,
-  //     Name: part.obj[index].Part_SerialNo,
-  //     Type: part.obj[index].Part_Type,
-  //     toInterv_ID:part.obj[index].Part_toInter_ID,
-  //     Deleted:part.obj[index].Part_delete,
-  //   }
-  //   parts.push(temp);
-  // });
-  // parts = parts.filter((elem, index, self) => index === self.findIndex((i) => (
-  //   i.PartID === elem.PartID
-  // ))
-  // );
-  // obj.forEach((obj, index) => {
-  //   temp = {
-  //     MechanicID: mech.obj[index].Mech_ID,
-  //     Name: mech.obj[index].Mech_Name,
-  //     Type: mech.obj[index].Mech_Type,
-  //     Deleted:mech.obj[index].Mech_delete,
-  //     Parts: parts
-  //   }
-  //   mechList.push(temp);
-  // });
-
-  // mechList = mechList.filter((elem, index, self) =>
-  // index === self.findIndex((i) => (
-  //   i.MechanicID === elem.MechanicID
-  //   ))
-  //   );
-
-  //   obj.forEach((obj, index) => {
-  //     temp = {
-  //       IterventionID: interv.obj[index].Inter_ID,
-  //       Type: interv.obj[index].Inter_Type,
-  //       Hours: interv.obj[index].Inter_Hours,
-  //       Description:interv.obj[index].description,
-  //       Deleted:interv.obj[index].Inter_delete,
-  //       Mechanics: mechList
-  //     }
-  //     intervList.push(temp);
-
-  //   });
-
-  //   intervList = intervList.filter((elem, index, self) => index === self.findIndex((i) => (
-  //     i.IterventionID === elem.IterventionID
-  //     ))
-  //     );
-
-  //     obj.forEach((obj, index) => {
-
-  //       temp = {
-  //         SheetID: servSh.obj[index].Service_S_ID,
-  //         Number: servSh.obj[index].Service_S_Num,
-  //         DateTime: servSh.obj[index].Date_Time,
-  //         Cost: servSh.obj[index].Cost,
-  //         Deleted:servSh.obj[index].Service_S_delete,
-  //         Intreventions: intervList
-  //       }
-  //       sSheetsList.push(temp)
-
-  //     });
-  //     sSheetsList = sSheetsList.filter((elem, index, self) => index === self.findIndex((i) => (
-  //       i.SheetID === elem.SheetID
-  //       ))
-  //       );
-  //       obj.forEach((obj, index) => {
-  //         temp = {
-  //           CarID: car.obj[index].Car_ID,
-  //           Make: car.obj[index].Make,
-  //           Model: car.obj[index].Model,
-  //           Year: car.obj[index].Year,
-  //           Deleted:car.obj[index].Car_delete,
-  //           ServiceSheet: sSheetsList
-  //         }
-  //         carsList.push(temp)
-  //       });
-  //       carsList = carsList.filter((elem, index, self) => index === self.findIndex((i) => (
-  //         i.CarID === elem.CarID
-  //         ))
-  //         );
-
-  //         obj.forEach((obj,index)=>{
-  //           temp = {
-  //             ownerID:owner.obj[index].Owner_ID,
-  //             Name: owner.obj[index].Name,
-  //             Email: owner.obj[index].email,
-  //             Deleted:owner.obj[index].Owner_delete,
-  //             Cars: carsList
-  //           }
-  //           ownerList.push(temp)
-  //         })
-  //         ownerList = ownerList.filter((elem, index, self) => index === self.findIndex((i) => (
-  //           i.ownerID === elem.ownerID
-  //           ))
-  //           );
   obj.forEach((obj, index) => {
     temp = {
       ownerID: owner.obj[index].Owner_ID,
@@ -203,11 +107,10 @@ ownersDataJSON = (obj) => {
       );
     })
   });
+
   obj.forEach((obj, index) => {
   ownerList[0].Cars.forEach((elem, i) => {
     elem.ServiceSheet.forEach((sS,e) => {
-      
-      console.log(sS.Intreventions[0].InterventionID)
       if (mech.obj[index].Mech_toInter_ID == sS.Intreventions[e].InterventionID) {
         temp = {
           MechanicID: mech.obj[index].Mech_ID,
@@ -224,15 +127,41 @@ ownersDataJSON = (obj) => {
                 sS.Intreventions[e].Mechanics.pop(ii)        
               }
             });
-
   sS.Intreventions[e].Mechanics = sS.Intreventions[e].Mechanics.filter((elem, index, self) => index === self.findIndex((i) => (
   i.MechanicID === elem.MechanicID
 ))
 );
-})
-    })
-  })
+});
+    });
+  });
 
+  obj.forEach((obj, index) => {
+  ownerList[0].Cars.forEach((elem, i) => {
+    elem.ServiceSheet.forEach((sS,e) => {
+      sS.Intreventions.forEach((iE,j)=>{
+        if (part.obj[index].Part_toInter_ID == iE.InterventionID) {
+          temp = {
+                PartID: part.obj[index].Part_ID,
+                Name: part.obj[index].Part_SerialNo,
+                Type: part.obj[index].Part_Type,
+                toInterv_ID:part.obj[index].Part_toInter_ID,
+                Deleted:part.obj[index].Part_delete,
+              }
+              iE.Mechanics[e].Parts.push(temp);
+            }
+                iE.Mechanics[e].Parts.forEach(ii=>{
+                  if(ii.toInterv_ID != iE.InterventionID){
+                    iE.Mechanics[e].Parts.pop(ii)        
+                  }
+                });
+                iE.Mechanics[e].Parts = iE.Mechanics[e].Parts.filter((elem, index, self) => index === self.findIndex((i) => (
+        i.PartID === elem.PartID
+        ))
+        );
+      });
+});
+    });
+  });
 
   return ownerList
 };
