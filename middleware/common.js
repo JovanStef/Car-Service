@@ -70,9 +70,10 @@ verifyToken = (req, res,next) => {
 
 checkRoleOwner = (req,res,next)=>{
     jwt.verify(req.token, 'owner', (err, authorizedData) => {
-        let keyWord = Object.keys(authorizedData.user)[0].split('_')
+        let keyWord = Object.keys(authorizedData.user)[0].split('_');
+        console.log(keyWord)
     if (keyWord[0] != 'Owner') {
-        res.status(403).send('Invalid authorisation');;
+        res.status(403).send('Owner Authorisation Required');;
     }
     else {
         next();
@@ -84,7 +85,7 @@ checkRoleOperator = (req,res,next)=>{
     jwt.verify(req.token, 'owner', (err, authorizedData) => {
         let keyWord = Object.keys(authorizedData.user)[0].split('_');
     if (keyWord[0] != 'Operator') {
-        res.status(403).send('Invalid authorisation');;
+        res.status(403).send('Operator Authorisation Required');;
     }
     else {
         next();

@@ -1,5 +1,19 @@
 const connectDB = require('../database');
 
+getAllOwnersAndTheirCarsQuery = ()=>{
+    const query = 'SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID;';
+    return new Promise ((resolve,reject)=>{
+        connectDB.query(query,(error,results,fields)=>{
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+};
+
 getOwnersByEmailQuery = (email)=>{
     const query = 'SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID\
     INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID\
@@ -83,5 +97,6 @@ module.exports={
     addNewOwnerQuery,
     getAllDataForOwnerIDQuery,
     softDeleteOwnerDataQuery,
-    getOwnerCredentials
+    getOwnerCredentials,
+    getAllOwnersAndTheirCarsQuery
 }

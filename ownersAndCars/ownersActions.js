@@ -3,10 +3,20 @@ const operatorQuerys =require('../operators/operatorQueries');
 const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('../models');
 
 const helpers = require('../helpers');
-const middleware = require('../middleware/common')
 
 var jwt = require('jsonwebtoken');
 
+getAllOwnersAndTheirCars =async(req,res)=>{
+    try{
+        let owner = await ownersQuerys.getAllOwnersAndTheirCarsQuery();
+        let data  = helpers.ownersAndCarsDataJSON(owner)
+         res.status(200).send(data);
+    }
+    catch (error){
+        res.status(500).send(error.message);
+
+    }
+};
 
 getOwnersByEmail =async(req,res)=>{
     try{
@@ -69,7 +79,6 @@ login=async(req,res)=>{
         let user
         let operatorCredentials = await operatorQuerys.getOperatorCredentials(pass,email);
         let ownerCredentials = await ownersQuerys.getOwnerCredentials(pass,email);
-        console.log('operatorCredentials')
         let bool = helpers.logginRoleDesc(user,operatorCredentials,ownerCredentials,pass);
         res.send(bool)
     
@@ -83,6 +92,7 @@ module.exports = {
     addNewOwner,
     getAllDataForOwnerID,
     softDeleteAllDataForOwnerID,
-    login
+    login,
+    getAllOwnersAndTheirCars
 
 }

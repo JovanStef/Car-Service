@@ -6,6 +6,7 @@ const carActions = require('./carsActions');
 
 let routes = express.Router();
 
+routes.get('/owners',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],ownerActions.getAllOwnersAndTheirCars);
 routes.post('/owners',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],ownerActions.getOwnersByEmail);
 routes.post('/login',ownerActions.login);
 

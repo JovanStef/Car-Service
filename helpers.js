@@ -67,9 +67,9 @@ ownersDataJSON = (obj) => {
         elem.ServiceSheet.push(temp)
       }
       // remove non matching FK = PK 
-      elem.ServiceSheet.forEach(ss=>{
-        if(ss.ServToCar !=elem.CarID){
-          elem.ServiceSheet.pop(ss)        
+      elem.ServiceSheet.forEach(ss => {
+        if (ss.ServToCar != elem.CarID) {
+          elem.ServiceSheet.pop(ss)
         }
       });
       // remove duplicate entries
@@ -89,15 +89,15 @@ ownersDataJSON = (obj) => {
             Type: interv.obj[index].Inter_Type,
             Hours: interv.obj[index].Inter_Hours,
             Description: interv.obj[index].description,
-            IntervToServ:interv.obj[index].Inter_toServiceS_ID,
+            IntervToServ: interv.obj[index].Inter_toServiceS_ID,
             Deleted: interv.obj[index].Inter_delete,
             Mechanics: mechList
           }
           sS.Intreventions.push(temp)
         }
-        sS.Intreventions.forEach(ii=>{
-          if(ii.IntervToServ !=sS.SheetID){
-            sS.Intreventions.pop(ii)        
+        sS.Intreventions.forEach(ii => {
+          if (ii.IntervToServ != sS.SheetID) {
+            sS.Intreventions.pop(ii)
           }
         });
       })
@@ -109,62 +109,152 @@ ownersDataJSON = (obj) => {
   });
 
   obj.forEach((obj, index) => {
-  ownerList[0].Cars.forEach((elem, i) => {
-    elem.ServiceSheet.forEach((sS,e) => {
-      if (mech.obj[index].Mech_toInter_ID == sS.Intreventions[e].InterventionID) {
-        temp = {
-          MechanicID: mech.obj[index].Mech_ID,
-          Name: mech.obj[index].Mech_Name,
-          Type: mech.obj[index].Mech_Type,
-          MechToInterv:mech.obj[index].Mech_toInter_ID,
-          Deleted:mech.obj[index].Mech_delete,
-          Parts: parts
+    ownerList[0].Cars.forEach((elem, i) => {
+      elem.ServiceSheet.forEach((sS, e) => {
+        if (mech.obj[index].Mech_toInter_ID == sS.Intreventions[e].InterventionID) {
+          temp = {
+            MechanicID: mech.obj[index].Mech_ID,
+            Name: mech.obj[index].Mech_Name,
+            Type: mech.obj[index].Mech_Type,
+            MechToInterv: mech.obj[index].Mech_toInter_ID,
+            Deleted: mech.obj[index].Mech_delete,
+            Parts: parts
+          }
+          sS.Intreventions[e].Mechanics.push(temp);
         }
-    sS.Intreventions[e].Mechanics.push(temp);
-  }
-      sS.Intreventions[e].Mechanics.forEach(ii=>{
-              if(ii.MechToInterv !=sS.Intreventions[e].InterventionID){
-                sS.Intreventions[e].Mechanics.pop(ii)        
-              }
-            });
-  sS.Intreventions[e].Mechanics = sS.Intreventions[e].Mechanics.filter((elem, index, self) => index === self.findIndex((i) => (
-  i.MechanicID === elem.MechanicID
-))
-);
-});
+        sS.Intreventions[e].Mechanics.forEach(ii => {
+          if (ii.MechToInterv != sS.Intreventions[e].InterventionID) {
+            sS.Intreventions[e].Mechanics.pop(ii)
+          }
+        });
+        sS.Intreventions[e].Mechanics = sS.Intreventions[e].Mechanics.filter((elem, index, self) => index === self.findIndex((i) => (
+          i.MechanicID === elem.MechanicID
+        ))
+        );
+      });
     });
   });
 
   obj.forEach((obj, index) => {
-  ownerList[0].Cars.forEach((elem, i) => {
-    elem.ServiceSheet.forEach((sS,e) => {
-      sS.Intreventions.forEach((iE,j)=>{
-        if (part.obj[index].Part_toInter_ID == iE.InterventionID) {
-          temp = {
-                PartID: part.obj[index].Part_ID,
-                Name: part.obj[index].Part_SerialNo,
-                Type: part.obj[index].Part_Type,
-                toInterv_ID:part.obj[index].Part_toInter_ID,
-                Deleted:part.obj[index].Part_delete,
-              }
-              iE.Mechanics[e].Parts.push(temp);
+    ownerList[0].Cars.forEach((elem, i) => {
+      elem.ServiceSheet.forEach((sS, e) => {
+        sS.Intreventions.forEach((iE, j) => {
+          if (part.obj[index].Part_toInter_ID == iE.InterventionID) {
+            temp = {
+              PartID: part.obj[index].Part_ID,
+              Name: part.obj[index].Part_SerialNo,
+              Type: part.obj[index].Part_Type,
+              toInterv_ID: part.obj[index].Part_toInter_ID,
+              Deleted: part.obj[index].Part_delete,
             }
-                iE.Mechanics[e].Parts.forEach(ii=>{
-                  if(ii.toInterv_ID != iE.InterventionID){
-                    iE.Mechanics[e].Parts.pop(ii)        
-                  }
-                });
-                iE.Mechanics[e].Parts = iE.Mechanics[e].Parts.filter((elem, index, self) => index === self.findIndex((i) => (
-        i.PartID === elem.PartID
-        ))
-        );
+            iE.Mechanics[e].Parts.push(temp);
+          }
+          iE.Mechanics[e].Parts.forEach(ii => {
+            if (ii.toInterv_ID != iE.InterventionID) {
+              iE.Mechanics[e].Parts.pop(ii)
+            }
+          });
+          iE.Mechanics[e].Parts = iE.Mechanics[e].Parts.filter((elem, index, self) => index === self.findIndex((i) => (
+            i.PartID === elem.PartID
+          ))
+          );
+        });
       });
-});
     });
   });
 
+
+
   return ownerList
 };
+
+ownersAndCarsDataJSON = (obj) => {
+  let owner = new Owner(obj);
+  let car = new Car(obj);
+  let servSh = new ServiceSheet(obj);
+  let interv = new Intervention(obj);
+  let mech = new Mechanic(obj);
+  let part = new Part(obj);
+
+  let parts = [];
+  let mechList = [];
+  let intervList = [];
+  let sSheetsList = []
+  let carsList = []
+  let ownerList = [];
+
+  obj.forEach((obj, index) => {
+    temp = {
+      ownerID: owner.obj[index].Owner_ID,
+      Name: owner.obj[index].Name,
+      Email: owner.obj[index].email,
+      Deleted: owner.obj[index].Owner_delete,
+      Cars: carsList
+    }
+    ownerList.push(temp)
+  })
+  ownerList = ownerList.filter((elem, index, self) => index === self.findIndex((i) => (
+    i.ownerID === elem.ownerID
+  ))
+  );
+
+  obj.forEach((obj, index) => {
+    ownerList.forEach((elem, i) => {
+      if (car.obj[index].Car_toOwner_ID == elem.ownerID) {
+        temp = {
+          CarID: car.obj[index].Car_ID,
+          Make: car.obj[index].Make,
+          Model: car.obj[index].Model,
+          Year: car.obj[index].Year,
+          CarToOwner: car.obj[index].Car_toOwner_ID,
+          Deleted: car.obj[index].Car_delete,
+          ServiceSheet: sSheetsList
+        }
+        elem.Cars.push(temp)
+      }
+      elem.Cars.forEach(ii => {
+        if (ii.CarToOwner != elem.ownerID) {
+          elem.Cars.pop(ii)
+        }
+      });
+      elem.Cars = elem.Cars.filter((elem, index, self) => index === self.findIndex((i) => (
+        i.CarID === elem.CarID
+      ))
+      );
+    })
+  });
+
+  obj.forEach((obj, index) => {
+    ownerList.forEach((oE,iE)=>{
+      oE.Cars.forEach((elem, i) => {
+        if (servSh.obj[index].Service_toCar_ID == elem.CarID) {
+          temp = {
+            SheetID: servSh.obj[index].Service_S_ID,
+            Number: servSh.obj[index].Service_S_Num,
+            DateTime: servSh.obj[index].Date_Time,
+            Cost: servSh.obj[index].Cost,
+            ServToCar: servSh.obj[index].Service_toCar_ID,
+            Deleted: servSh.obj[index].Service_S_delete,
+          }
+          elem.ServiceSheet.push(temp)
+        }
+        // remove non matching FK = PK 
+        elem.ServiceSheet.forEach(ss => {
+          if (ss.ServToCar != elem.CarID) {
+            elem.ServiceSheet.pop(ss)
+          }
+        });
+        // remove duplicate entries
+        elem.ServiceSheet = elem.ServiceSheet.filter((elem, index, self) => index === self.findIndex((i) => (
+          i.SheetID === elem.SheetID
+          ))
+          );
+        })
+      })
+  });
+
+  return ownerList
+}
 
 emailValidator = (email) => {
 
@@ -184,7 +274,7 @@ keyWordValidator = (obj) => {
   let keyWords = ["mechanic", "bodywork", "electric"];
   let bool = props.some(prop => {
     let word = keyWords.find(word => {
-      console.log(prop, word)
+      // console.log(prop, word)
       if (prop == word) {
         return true
       } else {
@@ -199,17 +289,6 @@ keyWordValidator = (obj) => {
   });
   return bool
 
-  //   let keyWords = ["mechanic","bodywork","electric"];
-  //   let bool = keyWords.some(word=>{
-  //     console.log(word , bodyWord)
-  //     if(word == bodyWord){
-  //       return true
-  //     }else{
-  //       return false
-  //     }
-  // });
-  //   console.log(bool)
-  //   return bool
 };
 
 responseError = (obj, resVar, message) => {
@@ -252,5 +331,6 @@ module.exports = {
   emailValidator,
   keyWordValidator,
   responseError,
-  logginRoleDesc
+  logginRoleDesc,
+  ownersAndCarsDataJSON
 };
