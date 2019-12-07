@@ -11,6 +11,7 @@ routes.post('/owners',[middleware.checkToken,middleware.verifyToken,middleware.c
 routes.post('/login',ownerActions.login);
 
 routes.get('/owners/data',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOwner],ownerActions.getAllDataForOwnerID);
+routes.post('/owners/personal',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOwner],ownerActions.updatePersonalInfoOwner);
 routes.post('/owners/new',[middleware.emailValidator],ownerActions.addNewOwner);
 
 routes.post('/admin/owners/data',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],ownerActions.softDeleteAllDataForOwnerID,middleware.redirectFunc);

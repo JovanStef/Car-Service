@@ -32,10 +32,10 @@ getOwnersByEmailQuery = (email)=>{
     });
 };
 
-getOwnerCredentials = (password,email)=>{
-    const query ='SELECT * FROM owner WHERE password=? AND email=?;'
+getOwnerCredentials = (email)=>{
+    const query ='SELECT * FROM owner WHERE email=?;'
     return new Promise((resolve,reject)=>{
-        connectDB.query(query,[password,email],(error,results,fields)=>{
+        connectDB.query(query,[email],(error,results,fields)=>{
             if(error){
                 reject(error);
             }else{
@@ -45,14 +45,14 @@ getOwnerCredentials = (password,email)=>{
     });
 };
 
-getAllDataForOwnerIDQuery = (password,email)=>{
+getAllDataForOwnerIDQuery = (email)=>{
     const query = 'SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID\
     INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID\
     INNER JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID\
     INNER JOIN mechanic ON intervention.Inter_ID=mechanic.Mech_toInter_ID\
-    INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID WHERE owner.password = ? AND owner.email=?;';
+    INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID WHERE owner.email=?;';
     return new Promise ((resolve,reject)=>{
-        connectDB.query(query,[password,email],(error,results,fields)=>{
+        connectDB.query(query,[email],(error,results,fields)=>{
             if (error) {
                 reject(error);
             }
@@ -67,6 +67,21 @@ addNewOwnerQuery = (request) => {
     const query = "INSERT INTO owner (Name, email, password)VALUES (?,?,?);";
     return new Promise((resolve, reject) => {
         connectDB.query(query, [request.Name, request.email, request.password], (error, results, fields) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+
+                resolve(results);
+            }
+        });
+    });
+};
+
+updatePersonalInfoOwnerQuery = (request,token) => {
+    const query = "UPDATE owner SET password = ? ,email=? WHERE owner.email= ?;";
+    return new Promise((resolve, reject) => {
+        connectDB.query(query, [request.new_password, request.email,token.email], (error, results, fields) => {
             if (error) {
                 reject(error);
             }
@@ -98,5 +113,6 @@ module.exports={
     getAllDataForOwnerIDQuery,
     softDeleteOwnerDataQuery,
     getOwnerCredentials,
-    getAllOwnersAndTheirCarsQuery
+    getAllOwnersAndTheirCarsQuery,
+    updatePersonalInfoOwnerQuery
 }

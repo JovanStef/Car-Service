@@ -1,6 +1,6 @@
 const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('./models');
 var jwt = require('jsonwebtoken');
-
+const bcrypt = require('bcryptjs')
 
 
 ownersDataJSON = (obj) => {
@@ -310,7 +310,8 @@ logginRoleDesc = (user, operator, owner, pass) => {
   }
   user = user[0];
   let role = Object.keys(user)[0].split('_');
-  if (user.password === pass) {
+  let checkPass = bcrypt.compareSync(pass, user.password)
+  if (checkPass) {
     var privateKey = 'owner'
     var token = jwt.sign({ user }, privateKey, { expiresIn: '24h' });
     let userToSend = {
@@ -321,7 +322,7 @@ logginRoleDesc = (user, operator, owner, pass) => {
     }
     return userToSend
   } else {
-    return false
+    return "Wrong password"
 
   }
 }

@@ -207,10 +207,11 @@ SELECT * FROM owner INNER JOIN car ON owner.Owner_ID=car.Car_toOwner_ID
 INNER JOIN service_sheet ON car.Car_ID=service_sheet.Service_toCar_ID
 INNER JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID
 INNER JOIN mechanic ON intervention.Inter_ID=mechanic.Mech_toInter_ID
-INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID WHERE owner.Owner_ID=1;
+INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID;
 
 SELECT * FROM intervention INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID WHERE intervention.Inter_ID=1;
 
 -- UPDATE service_sheet SET Date_Time = NOW(), Cost = 1254 WHERE Service_S_ID=5;
 -- UPDATE intervention SET Inter_Type="electric",Inter_Hours = 12 WHERE Inter_toServiceS_ID=5;
 -- 
+UPDATE mechanic SET Mech_toInter_ID=17 WHERE Mech_ID = 8;
