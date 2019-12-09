@@ -82,7 +82,7 @@ ownersDataJSON = (obj) => {
   obj.forEach((obj, index) => {
     ownerList[0].Cars.forEach((elem, i) => {
       elem.ServiceSheet.forEach(sS => {
-
+        
         if (interv.obj[index].Inter_toServiceS_ID == sS.SheetID) {
           temp = {
             InterventionID: interv.obj[index].Inter_ID,
@@ -100,11 +100,11 @@ ownersDataJSON = (obj) => {
             sS.Intreventions.pop(ii)
           }
         });
+        sS.Intreventions = sS.Intreventions.filter((elem, index, self) => index === self.findIndex((i) => (
+          i.IterventionID === elem.IterventionID
+        ))
+        );
       })
-      elem.ServiceSheet[0].Intreventions = elem.ServiceSheet[0].Intreventions.filter((elem, index, self) => index === self.findIndex((i) => (
-        i.IterventionID === elem.IterventionID
-      ))
-      );
     })
   });
 
@@ -234,7 +234,7 @@ ownersAndCarsDataJSON = (obj) => {
             DateTime: servSh.obj[index].Date_Time,
             Cost: servSh.obj[index].Cost,
             ServToCar: servSh.obj[index].Service_toCar_ID,
-            Deleted: servSh.obj[index].Service_S_delete,
+            Deleted: servSh.obj[index].Service_S_delete
           }
           elem.ServiceSheet.push(temp)
         }
@@ -252,6 +252,8 @@ ownersAndCarsDataJSON = (obj) => {
         })
       })
   });
+
+
 
   return ownerList
 }
@@ -291,8 +293,8 @@ keyWordValidator = (obj) => {
 
 };
 
-responseError = (obj, resVar, message) => {
-  if (obj.affectedRows == 0 || resVar.length == 0) {
+responseError = ( resVar, message) => {
+  if (resVar.affectedRows == 0 || resVar.length == 0) {
     return message
   }
 

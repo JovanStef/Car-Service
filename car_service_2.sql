@@ -19,5 +19,7 @@ SELECT Owner_ID FROM owner ORDER BY Owner_ID DESC LIMIT 1 into @owner;
 INSERT INTO car (Make,Model,Year,Car_toOwner_ID) 
 VALUES ("Opel","Corsa",2000,@owner);
 
+SET SQL_SAFE_UPDATES=1;
+SELECT * FROM owner WHERE owner.email= "nonnita@mail.com";
 
-SELECT * FROM owner WHERE owner.password="nonnita" AND owner.email= "nonnita@mail.com";
+UPDATE operator SET password = "$2a$05$Nsxy.AGKvb1K9GP2eAeUxe8DWMfUsL72xVeAzmrWOsP9kGJf5kGOK";

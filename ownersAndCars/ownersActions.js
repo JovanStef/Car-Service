@@ -1,6 +1,5 @@
 const ownersQuerys = require('./ownersQueries');
 const operatorQuerys = require('../operators/operatorQueries');
-const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('../models');
 const bcrypt = require('bcryptjs')
 const helpers = require('../helpers');
 var jwt = require('jsonwebtoken');
@@ -20,8 +19,13 @@ getAllOwnersAndTheirCars = async (req, res) => {
 getOwnersByEmail = async (req, res) => {
     try {
         let owner = await ownersQuerys.getOwnersByEmailQuery(req.body.email);
-        let data = helpers.ownersDataJSON(owner);
-        res.status(200).send(data);
+        let resErr = helpers.responseError(owner, `Owner with e-mail: ${req.body.email} does not exist`)
+        if (resErr) {
+            res.status(401).send(resErr);
+        } else {
+            let data = helpers.ownersDataJSON(owner);
+            res.status(200).send(data);
+        }
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -35,7 +39,7 @@ getAllDataForOwnerID = async (req, res) => {
     })
     try {
         let allDataOwners = await ownersQuerys.getAllDataForOwnerIDQuery(tokenData.user.email);
-        let resErr = helpers.responseError(res, allDataOwners, 'Please check your credentials')
+        let resErr = helpers.responseError(allDataOwners, 'Please check your credentials')
         if (resErr) {
             res.status(401).send(resErr);
         } else {
@@ -60,7 +64,7 @@ updatePersonalInfoOwner = async (req, res) => {
     } else {
         try {
             let dataOwner = await ownersQuerys.updatePersonalInfoOwnerQuery(owner, tokenData.user);
-            let resErr = helpers.responseError(res, dataOwner, 'Please check your credentials')
+            let resErr = helpers.responseError(dataOwner, 'Please check your credentials')
             if (resErr) {
                 res.status(401).send(resErr);
             } else {
@@ -90,7 +94,12 @@ addNewOwner = async (req, res) => {
 softDeleteAllDataForOwnerID = async (req, res) => {
     try {
         let ownerDataToDelete = await ownersQuerys.softDeleteOwnerDataQuery(req.body.owner_id, req.body.deleted);
-        res.status(200).send(`Owner with ID ${req.body.owner_id} new deleted value`);
+        let resErr = helpers.responseError( ownerDataToDelete, `Owner with ID ${req.body.owner_id} does not exist!`);
+        if (resErr) {
+            res.status(401).send(resErr);
+        } else {
+            res.status(200).send(`Owner with ID ${req.body.owner_id} new deleted value`);
+        }
     }
     catch (error) {
         res.status(500).send(error.message);
