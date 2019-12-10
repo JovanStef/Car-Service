@@ -1,9 +1,22 @@
 const servShQuerys = require('./servSheetQueries');
+const helpers = require('../helpers');
 
 getAllServSh = async (req, res) => {
     try {
         let allServSh = await servShQuerys.getAllServShQuery();
         res.status(200).send(allServSh);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+
+    }
+};
+
+getServShbySnum = async (req, res) => {
+    try {
+        let ServSh = await servShQuerys.getServShDatabySerialQuery(req.params.sSnum);
+        let data = helpers.serviceSheetData(ServSh)
+        res.status(200).send(data);
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -36,6 +49,7 @@ updateServSh = async (req, res) => {
 module.exports = {
     getAllServSh,
     addNewServSh,
-    updateServSh
+    updateServSh,
+    getServShbySnum
 
 }

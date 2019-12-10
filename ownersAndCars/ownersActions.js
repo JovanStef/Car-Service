@@ -7,7 +7,7 @@ var jwt = require('jsonwebtoken');
 getAllOwnersAndTheirCars = async (req, res) => {
     try {
         let owner = await ownersQuerys.getAllOwnersAndTheirCarsQuery();
-        let data = helpers.ownersAndCarsDataJSON(owner)
+        let data = helpers.allData(owner)
         res.status(200).send(data);
     }
     catch (error) {
@@ -23,7 +23,8 @@ getOwnersByEmail = async (req, res) => {
         if (resErr) {
             res.status(401).send(resErr);
         } else {
-            let data = helpers.ownersDataJSON(owner);
+            let data = helpers.allData(owner)
+
             res.status(200).send(data);
         }
     }
@@ -38,12 +39,13 @@ getAllDataForOwnerID = async (req, res) => {
         return authorizedData
     })
     try {
-        let allDataOwners = await ownersQuerys.getAllDataForOwnerIDQuery(tokenData.user.email);
-        let resErr = helpers.responseError(allDataOwners, 'Please check your credentials')
+        let owner = await ownersQuerys.getAllDataForOwnerIDQuery(tokenData.user.email);
+        let resErr = helpers.responseError(owner, 'Please check your credentials')
         if (resErr) {
             res.status(401).send(resErr);
         } else {
-            let data = helpers.ownersDataJSON(allDataOwners);
+            let data = helpers.allData(owner)
+
             res.status(200).send(data);
         }
     }
