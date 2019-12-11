@@ -1,220 +1,144 @@
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
 
-serviceSheetData = (obj)=>{
-  let temp_sSheet = [];
-  let temp_Interv = [];
-  let temp_Mech = [];
-  let temp_Parts = [];
-obj.forEach(elem=>{
-  S_temp = {
-    SheetID: elem.Service_S_ID,
-    Number: elem.Service_S_Num,
-    DateTime: elem.Date_Time,
-    ServToCar: elem.Service_toCar_ID,
-    Cost:0,
-    Deleted: elem.Service_S_delete,
-    Intreventions:[]
-  }
-  temp_sSheet.push(S_temp);
-  
-  I_temp = {
-    InterventionID: elem.Inter_ID,
-    Type: elem.Inter_Type,
-    Hours: elem.Inter_Hours,
-    Description: elem.description,
-    IntervToServ: elem.Inter_toServiceS_ID,
-    InterventionCost: elem.interv_cost,
-    Deleted: elem.Inter_delete,
-    Mechanics: []
-  }
-  temp_Interv.push(I_temp);
-
-  M_temp = {
-    MechanicID: elem.Mech_ID,
-    Name: elem.Mech_Name,
-    Type: elem.Mech_Type,
-    MechToInterv: elem.Mech_toInter_ID,
-    Deleted: elem.Mech_delete,
-    Parts: []
-  }
-  temp_Mech.push(M_temp);
-
-  P_temp = {
-    PartID: elem.Part_ID,
-    Name: elem.Part_SerialNo,
-    Type: elem.Part_Type,
-    toInterv_ID: elem.Part_toInter_ID,
-    Deleted: elem.Part_delete,
-  }
-  temp_Parts.push(P_temp)
-
-});
-
-temp_sSheet = temp_sSheet.filter((elem, index, self) => index === self.findIndex((i) => (i.SheetID === elem.SheetID)));
-temp_Interv = temp_Interv.filter((elem, index, self) => index === self.findIndex((i) => (i.InterventionID === elem.InterventionID)));
-temp_Mech = temp_Mech.filter((elem, index, self) => index === self.findIndex((i) => (i.MechanicID === elem.MechanicID)));
-temp_Parts = temp_Parts.filter((elem, index, self) => index === self.findIndex((i) => (i.PartID === elem.PartID)));
-
-temp_Mech.forEach(m_elem=>{
-  temp_Parts.forEach(p_elem=>{
-    if(m_elem.MechToInterv == p_elem.toInterv_ID){
-m_elem.Parts.push(p_elem)
-    }
-  });
-});
-
-temp_Interv.forEach(i_elem=>{
-  temp_Mech.forEach(m_elem=>{
-if(i_elem.InterventionID == m_elem.MechToInterv){
-  i_elem.Mechanics.push(m_elem)
-}
-  });
-});
-
-temp_sSheet.forEach(s_elem=>{
-  let cost = 0;
-  temp_Interv.forEach(i_elem=>{
-    if(s_elem.SheetID == i_elem.IntervToServ){
-      cost += i_elem.InterventionCost
-      s_elem.Intreventions.push(i_elem)
-    }
-  })
-  s_elem.Cost=cost
-})
-
-// console.log(temp_sSheet)
-// console.log(temp_Interv)
-// console.log(temp_Mech)
-// console.log(temp_Parts)
-
-return temp_sSheet
-}
-
-allData = (obj)=>{
+function allData(obj) {
   let temp_Owners = [];
   let temp_Cars = [];
   let temp_sSheet = [];
   let temp_Interv = [];
   let temp_Mech = [];
   let temp_Parts = [];
-obj.forEach(elem=>{
-  O_temp = {
-    ownerID: elem.Owner_ID,
-    Name: elem.Name,
-    Email: elem.email,
-    Deleted: elem.Owner_delete,
-    Cars: []
-  }
-  temp_Owners.push(O_temp);
-
-  C_temp = {
-    CarID: elem.Car_ID,
-    Make: elem.Make,
-    Model: elem.Model,
-    Year: elem.Year,
-    CarToOwner: elem.Car_toOwner_ID,
-    Deleted: elem.Car_delete,
-    ServiceSheet: []
-  }
-  temp_Cars.push(C_temp);
-
-  S_temp = {
-    SheetID: elem.Service_S_ID,
-    Number: elem.Service_S_Num,
-    DateTime: elem.Date_Time,
-    ServToCar: elem.Service_toCar_ID,
-    Deleted: elem.Service_S_delete,
-    Intreventions:[]
-  }
-  temp_sSheet.push(S_temp);
-  
-  I_temp = {
-    InterventionID: elem.Inter_ID,
-    Type: elem.Inter_Type,
-    Hours: elem.Inter_Hours,
-    Description: elem.description,
-    IntervToServ: elem.Inter_toServiceS_ID,
-    InterventionCost: elem.interv_cost,
-    Deleted: elem.Inter_delete,
-    Mechanics: []
-  }
-  temp_Interv.push(I_temp);
-
-  M_temp = {
-    MechanicID: elem.Mech_ID,
-    Name: elem.Mech_Name,
-    Type: elem.Mech_Type,
-    MechToInterv: elem.Mech_toInter_ID,
-    Deleted: elem.Mech_delete,
-    Parts: []
-  }
-  temp_Mech.push(M_temp);
-
-  P_temp = {
-    PartID: elem.Part_ID,
-    Name: elem.Part_SerialNo,
-    Type: elem.Part_Type,
-    toInterv_ID: elem.Part_toInter_ID,
-    Deleted: elem.Part_delete,
-  }
-  temp_Parts.push(P_temp)
-
-});
-
-temp_Owners = temp_Owners.filter((elem, index, self) => index === self.findIndex((i) => (i.ownerID === elem.ownerID)));
-temp_Cars = temp_Cars.filter((elem, index, self) => index === self.findIndex((i) => (i.CarID === elem.CarID)));
-temp_sSheet = temp_sSheet.filter((elem, index, self) => index === self.findIndex((i) => (i.SheetID === elem.SheetID)));
-temp_Interv = temp_Interv.filter((elem, index, self) => index === self.findIndex((i) => (i.InterventionID === elem.InterventionID)));
-temp_Mech = temp_Mech.filter((elem, index, self) => index === self.findIndex((i) => (i.MechanicID === elem.MechanicID)));
-temp_Parts = temp_Parts.filter((elem, index, self) => index === self.findIndex((i) => (i.PartID === elem.PartID)));
-
-temp_Mech.forEach(m_elem=>{
-  temp_Parts.forEach(p_elem=>{
-    if(m_elem.MechToInterv == p_elem.toInterv_ID){
-m_elem.Parts.push(p_elem)
+  obj.forEach(elem => {
+    O_temp = {
+      ownerID: elem.Owner_ID,
+      Name: elem.Name,
+      Email: elem.email,
+      Deleted: elem.Owner_delete,
+      Cars: []
     }
-  });
-});
+    temp_Owners.push(O_temp);
 
-temp_Interv.forEach(i_elem=>{
-  temp_Mech.forEach(m_elem=>{
-if(i_elem.InterventionID == m_elem.MechToInterv){
-  i_elem.Mechanics.push(m_elem)
-}
-  });
-});
-
-temp_sSheet.forEach(s_elem=>{
-  temp_Interv.forEach(i_elem=>{
-    if(s_elem.SheetID == i_elem.IntervToServ){
-      s_elem.Intreventions.push(i_elem)
+    C_temp = {
+      CarID: elem.Car_ID,
+      Make: elem.Make,
+      Model: elem.Model,
+      Year: elem.Year,
+      CarToOwner: elem.Car_toOwner_ID,
+      Deleted: elem.Car_delete,
+      ServiceSheet: []
     }
-  });
-});
+    temp_Cars.push(C_temp);
 
-temp_Cars.forEach(c_elem=>{
-  temp_sSheet.forEach(s_elem=>{
-    if(c_elem.CarID == s_elem.ServToCar){
-      c_elem.ServiceSheet.push(s_elem)
+    S_temp = {
+      SheetID: elem.Service_S_ID,
+      Number: elem.Service_S_Num,
+      DateTime: elem.Date_Time,
+      ServToCar: elem.Service_toCar_ID,
+      Cost: 0,
+      Deleted: elem.Service_S_delete,
+      Intreventions: []
     }
-  });
-});
+    temp_sSheet.push(S_temp);
 
-temp_Owners.forEach(o_elem=>{
-  temp_Cars.forEach(c_elem=>{
-    if(o_elem.ownerID == c_elem.CarToOwner){
-o_elem.Cars.push(c_elem);
+    I_temp = {
+      InterventionID: elem.Inter_ID,
+      Type: elem.Inter_Type,
+      Hours: elem.Inter_Hours,
+      Description: elem.description,
+      IntervToServ: elem.Inter_toServiceS_ID,
+      InterventionCost: elem.interv_cost,
+      Deleted: elem.Inter_delete,
+      Mechanics: []
     }
+    temp_Interv.push(I_temp);
+
+    M_temp = {
+      MechanicID: elem.Mech_ID,
+      Name: elem.Mech_Name,
+      Type: elem.Mech_Type,
+      MechToInterv: elem.Mech_toInter_ID,
+      Deleted: elem.Mech_delete,
+      Parts: []
+    }
+    temp_Mech.push(M_temp);
+
+    P_temp = {
+      PartID: elem.Part_ID,
+      Name: elem.Part_SerialNo,
+      Type: elem.Part_Type,
+      toInterv_ID: elem.Part_toInter_ID,
+      Deleted: elem.Part_delete,
+    }
+    temp_Parts.push(P_temp)
+
+  });
+
+  temp_Owners = temp_Owners.filter((elem, index, self) => index === self.findIndex((i) => (i.ownerID === elem.ownerID)));
+  temp_Cars = temp_Cars.filter((elem, index, self) => index === self.findIndex((i) => (i.CarID === elem.CarID)));
+  temp_sSheet = temp_sSheet.filter((elem, index, self) => index === self.findIndex((i) => (i.SheetID === elem.SheetID)));
+  temp_Interv = temp_Interv.filter((elem, index, self) => index === self.findIndex((i) => (i.InterventionID === elem.InterventionID)));
+  temp_Mech = temp_Mech.filter((elem, index, self) => index === self.findIndex((i) => (i.MechanicID === elem.MechanicID)));
+  temp_Parts = temp_Parts.filter((elem, index, self) => index === self.findIndex((i) => (i.PartID === elem.PartID)));
+
+  temp_Mech.forEach(m_elem => {
+    temp_Parts.forEach(p_elem => {
+      if (m_elem.MechToInterv == p_elem.toInterv_ID) {
+        m_elem.Parts.push(p_elem)
+      }
+    });
+  });
+
+  temp_Interv.forEach(i_elem => {
+    temp_Mech.forEach(m_elem => {
+      if (i_elem.InterventionID == m_elem.MechToInterv) {
+        i_elem.Mechanics.push(m_elem)
+      }
+    });
+  });
+
+  temp_sSheet.forEach(s_elem => {
+    let cost = 0;
+    temp_Interv.forEach(i_elem => {
+      if (s_elem.SheetID == i_elem.IntervToServ) {
+        cost += i_elem.InterventionCost
+        s_elem.Intreventions.push(i_elem)
+      }
+    })
+    s_elem.Cost = cost
+  });
+
+  temp_Cars.forEach(c_elem => {
+    temp_sSheet.forEach(s_elem => {
+      if (c_elem.CarID == s_elem.ServToCar) {
+        c_elem.ServiceSheet.push(s_elem)
+      }
+    });
+  });
+
+  temp_Owners.forEach(o_elem => {
+    temp_Cars.forEach(c_elem => {
+      if (o_elem.ownerID == c_elem.CarToOwner) {
+        o_elem.Cars.push(c_elem);
+      }
+    })
   })
-})
 
-// console.log(temp_sSheet)
-// console.log(temp_Interv)
-// console.log(temp_Mech)
-// console.log(temp_Parts)
+  this.owner = function () {
+    return temp_Owners
+  };
+  this.serviceS = function () {
+    return temp_sSheet
+  };
+  this.intervention = function () {
+    return temp_Interv
+  };
+  this.mechanic = function () {
+    return temp_Mech
+  };
+  this.part = function () {
+    return temp_Parts
+  };
 
-return temp_Owners
 }
 emailValidator = (email) => {
 
@@ -251,7 +175,7 @@ keyWordValidator = (obj) => {
 
 };
 
-responseError = ( resVar, message) => {
+responseError = (resVar, message) => {
   if (resVar.affectedRows == 0 || resVar.length == 0) {
     return message
   }
@@ -292,6 +216,5 @@ module.exports = {
   keyWordValidator,
   responseError,
   logginRoleDesc,
-  serviceSheetData,
   allData
 };

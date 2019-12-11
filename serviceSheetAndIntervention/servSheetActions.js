@@ -1,5 +1,5 @@
 const servShQuerys = require('./servSheetQueries');
-const helpers = require('../helpers');
+const {allData} = require('../helpers');
 
 getAllServSh = async (req, res) => {
     try {
@@ -15,7 +15,8 @@ getAllServSh = async (req, res) => {
 getServShbySnum = async (req, res) => {
     try {
         let ServSh = await servShQuerys.getServShDatabySerialQuery(req.params.sSnum);
-        let data = helpers.serviceSheetData(ServSh)
+        let data = new allData(ServSh);
+        data = data.serviceS();
         res.status(200).send(data);
     }
     catch (error) {

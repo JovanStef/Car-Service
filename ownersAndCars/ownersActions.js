@@ -1,13 +1,14 @@
 const ownersQuerys = require('./ownersQueries');
 const operatorQuerys = require('../operators/operatorQueries');
 const bcrypt = require('bcryptjs')
-const helpers = require('../helpers');
+const {allData,responseError,logginRoleDesc} = require('../helpers');
 var jwt = require('jsonwebtoken');
 
 getAllOwnersAndTheirCars = async (req, res) => {
     try {
         let owner = await ownersQuerys.getAllOwnersAndTheirCarsQuery();
-        let data = helpers.allData(owner)
+        let data = new allData(owner);
+        data = data.owner();
         res.status(200).send(data);
     }
     catch (error) {
@@ -19,12 +20,12 @@ getAllOwnersAndTheirCars = async (req, res) => {
 getOwnersByEmail = async (req, res) => {
     try {
         let owner = await ownersQuerys.getOwnersByEmailQuery(req.body.email);
-        let resErr = helpers.responseError(owner, `Owner with e-mail: ${req.body.email} does not exist`)
+        let resErr = responseError(owner, `Owner with e-mail: ${req.body.email} does not exist`)
         if (resErr) {
             res.status(401).send(resErr);
         } else {
-            let data = helpers.allData(owner)
-
+            let data = new allData(owner);
+            data = data.owner();
             res.status(200).send(data);
         }
     }
@@ -40,12 +41,12 @@ getAllDataForOwnerID = async (req, res) => {
     })
     try {
         let owner = await ownersQuerys.getAllDataForOwnerIDQuery(tokenData.user.email);
-        let resErr = helpers.responseError(owner, 'Please check your credentials')
+        let resErr = responseError(owner, 'Please check your credentials')
         if (resErr) {
             res.status(401).send(resErr);
         } else {
-            let data = helpers.allData(owner)
-
+            let data = new allData(owner);
+        data = data.owner();
             res.status(200).send(data);
         }
     }
@@ -66,7 +67,7 @@ updatePersonalInfoOwner = async (req, res) => {
     } else {
         try {
             let dataOwner = await ownersQuerys.updatePersonalInfoOwnerQuery(owner, tokenData.user);
-            let resErr = helpers.responseError(dataOwner, 'Please check your credentials')
+            let resErr = responseError(dataOwner, 'Please check your credentials')
             if (resErr) {
                 res.status(401).send(resErr);
             } else {
@@ -96,7 +97,7 @@ addNewOwner = async (req, res) => {
 softDeleteAllDataForOwnerID = async (req, res) => {
     try {
         let ownerDataToDelete = await ownersQuerys.softDeleteOwnerDataQuery(req.body.owner_id, req.body.deleted);
-        let resErr = helpers.responseError( ownerDataToDelete, `Owner with ID ${req.body.owner_id} does not exist!`);
+        let resErr = responseError( ownerDataToDelete, `Owner with ID ${req.body.owner_id} does not exist!`);
         if (resErr) {
             res.status(401).send(resErr);
         } else {
@@ -116,7 +117,7 @@ login = async (req, res) => {
         let user
         let operatorCredentials = await operatorQuerys.getOperatorCredentials(email);
         let ownerCredentials = await ownersQuerys.getOwnerCredentials(email);
-        let bool = helpers.logginRoleDesc(user, operatorCredentials, ownerCredentials, pass);
+        let bool = logginRoleDesc(user, operatorCredentials, ownerCredentials, pass);
         res.send(bool)
 
     } catch (error) {
