@@ -17,7 +17,7 @@ getServShDatabySerialQuery = (sS_Num)=>{
     const query = 'SELECT *FROM service_sheet JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID \
     INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID \
     INNER JOIN mechanic ON intervention.Inter_ID=mechanic.Mech_toInter_ID \
-    WHERE service_sheet.Service_S_Num=?;';
+    WHERE intervention.Inter_delete = 0 AND service_sheet.Service_S_Num=?;';
     return new Promise ((resolve,reject)=>{
         connectDB.query(query,[sS_Num],(error,results,fields)=>{
             if (error) {

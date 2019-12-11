@@ -1,4 +1,3 @@
-const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('./models');
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs')
 
@@ -13,6 +12,7 @@ obj.forEach(elem=>{
     Number: elem.Service_S_Num,
     DateTime: elem.Date_Time,
     ServToCar: elem.Service_toCar_ID,
+    Cost:0,
     Deleted: elem.Service_S_delete,
     Intreventions:[]
   }
@@ -24,6 +24,7 @@ obj.forEach(elem=>{
     Hours: elem.Inter_Hours,
     Description: elem.description,
     IntervToServ: elem.Inter_toServiceS_ID,
+    InterventionCost: elem.interv_cost,
     Deleted: elem.Inter_delete,
     Mechanics: []
   }
@@ -65,18 +66,21 @@ m_elem.Parts.push(p_elem)
 
 temp_Interv.forEach(i_elem=>{
   temp_Mech.forEach(m_elem=>{
-if(i_elem.IntervToServ == m_elem.MechToInterv){
+if(i_elem.InterventionID == m_elem.MechToInterv){
   i_elem.Mechanics.push(m_elem)
 }
   });
 });
 
 temp_sSheet.forEach(s_elem=>{
+  let cost = 0;
   temp_Interv.forEach(i_elem=>{
     if(s_elem.SheetID == i_elem.IntervToServ){
+      cost += i_elem.InterventionCost
       s_elem.Intreventions.push(i_elem)
     }
   })
+  s_elem.Cost=cost
 })
 
 // console.log(temp_sSheet)

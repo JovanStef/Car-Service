@@ -37,9 +37,19 @@ updateInterv = async (req, res) => {
 };
 
 softDeleteInterv = async(req,res)=>{
+    let del = (req.body.deleted ==1)? "Deleted." : "Restored."
     try {
+        if(req.body.deleted > 1){
+            res.status(401).send(`Value for "deleted" must be 0 or 1.`);
+        } 
         let interv = await intervQuerys.softDeleteIntervQuery(req.body.interv_ID,req.body.deleted);
-        res.status(200).send(`Intervention with ID ${req.body.interv_ID} new deleted value`);
+        let resErr = helpers.responseError(interv, `Intervention with ID ${req.body.interv_ID} does not exist`)
+        if (resErr) {
+            res.status(401).send(resErr);
+        }
+         else {
+            res.status(200).send(`Intervention with ID ${req.body.interv_ID} => ${del}`);
+        }
 
     } catch (error) {
         res.status(500).send(error.message);
