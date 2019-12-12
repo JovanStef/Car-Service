@@ -1,5 +1,16 @@
 var jwt = require('jsonwebtoken');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const {Owner,Car,ServiceSheet,Intervention,Mechanic,Part}=require('./models');
+
+compareID=(arr1,arr2,arr3,id1,id2)=>{
+  arr1.forEach(m_elem => {
+    arr2.forEach(p_elem => {
+      if (m_elem.id1 == p_elem.id2) {
+        m_elem[arr3].push(p_elem)
+      }
+    });
+  });
+};
 
 function allData(obj) {
   let temp_Owners = [];
@@ -9,66 +20,23 @@ function allData(obj) {
   let temp_Mech = [];
   let temp_Parts = [];
   obj.forEach(elem => {
-    O_temp = {
-      ownerID: elem.Owner_ID,
-      Name: elem.Name,
-      Email: elem.email,
-      Deleted: elem.Owner_delete,
-      Cars: []
-    }
+
+    let O_temp = new Owner(elem)
     temp_Owners.push(O_temp);
 
-    C_temp = {
-      CarID: elem.Car_ID,
-      Make: elem.Make,
-      Model: elem.Model,
-      Year: elem.Year,
-      CarToOwner: elem.Car_toOwner_ID,
-      Deleted: elem.Car_delete,
-      ServiceSheet: []
-    }
+    let C_temp = new Car(elem)
     temp_Cars.push(C_temp);
 
-    S_temp = {
-      SheetID: elem.Service_S_ID,
-      Number: elem.Service_S_Num,
-      DateTime: elem.Date_Time,
-      ServToCar: elem.Service_toCar_ID,
-      Cost: 0,
-      Deleted: elem.Service_S_delete,
-      Intreventions: []
-    }
+    let S_temp = new ServiceSheet(elem)
     temp_sSheet.push(S_temp);
 
-    I_temp = {
-      InterventionID: elem.Inter_ID,
-      Type: elem.Inter_Type,
-      Hours: elem.Inter_Hours,
-      Description: elem.description,
-      IntervToServ: elem.Inter_toServiceS_ID,
-      InterventionCost: elem.interv_cost,
-      Deleted: elem.Inter_delete,
-      Mechanics: []
-    }
+    let I_temp= new Intervention(elem)
     temp_Interv.push(I_temp);
 
-    M_temp = {
-      MechanicID: elem.Mech_ID,
-      Name: elem.Mech_Name,
-      Type: elem.Mech_Type,
-      MechToInterv: elem.Mech_toInter_ID,
-      Deleted: elem.Mech_delete,
-      Parts: []
-    }
+    let M_temp = new Mechanic(elem)
     temp_Mech.push(M_temp);
 
-    P_temp = {
-      PartID: elem.Part_ID,
-      Name: elem.Part_SerialNo,
-      Type: elem.Part_Type,
-      toInterv_ID: elem.Part_toInter_ID,
-      Deleted: elem.Part_delete,
-    }
+   let P_temp = new Part(elem)
     temp_Parts.push(P_temp)
 
   });
@@ -80,13 +48,15 @@ function allData(obj) {
   temp_Mech = temp_Mech.filter((elem, index, self) => index === self.findIndex((i) => (i.MechanicID === elem.MechanicID)));
   temp_Parts = temp_Parts.filter((elem, index, self) => index === self.findIndex((i) => (i.PartID === elem.PartID)));
 
-  temp_Mech.forEach(m_elem => {
-    temp_Parts.forEach(p_elem => {
-      if (m_elem.MechToInterv == p_elem.toInterv_ID) {
-        m_elem.Parts.push(p_elem)
-      }
-    });
-  });
+  // temp_Mech.forEach(m_elem => {
+  //   temp_Parts.forEach(p_elem => {
+  //     if (m_elem.MechToInterv == p_elem.toInterv_ID) {
+  //       m_elem.Parts.push(p_elem)
+  //     }
+  //   });
+  // });
+
+  compareID(temp_Mech,temp_Parts,'Parts','MechToInterv','toInterv_ID');
 
   temp_Interv.forEach(i_elem => {
     temp_Mech.forEach(m_elem => {
