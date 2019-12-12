@@ -5,7 +5,7 @@ const {Owner,Car,ServiceSheet,Intervention,Mechanic,Part}=require('./models');
 compareID=(arr1,arr2,arr3,id1,id2)=>{
   arr1.forEach(m_elem => {
     arr2.forEach(p_elem => {
-      if (m_elem.id1 == p_elem.id2) {
+      if (m_elem[id1] == p_elem[id2]) {
         m_elem[arr3].push(p_elem)
       }
     });
@@ -48,23 +48,9 @@ function allData(obj) {
   temp_Mech = temp_Mech.filter((elem, index, self) => index === self.findIndex((i) => (i.MechanicID === elem.MechanicID)));
   temp_Parts = temp_Parts.filter((elem, index, self) => index === self.findIndex((i) => (i.PartID === elem.PartID)));
 
-  // temp_Mech.forEach(m_elem => {
-  //   temp_Parts.forEach(p_elem => {
-  //     if (m_elem.MechToInterv == p_elem.toInterv_ID) {
-  //       m_elem.Parts.push(p_elem)
-  //     }
-  //   });
-  // });
-
   compareID(temp_Mech,temp_Parts,'Parts','MechToInterv','toInterv_ID');
 
-  temp_Interv.forEach(i_elem => {
-    temp_Mech.forEach(m_elem => {
-      if (i_elem.InterventionID == m_elem.MechToInterv) {
-        i_elem.Mechanics.push(m_elem)
-      }
-    });
-  });
+  compareID(temp_Interv,temp_Mech,'Mechanics','InterventionID','MechToInterv');
 
   temp_sSheet.forEach(s_elem => {
     let cost = 0;
@@ -77,21 +63,9 @@ function allData(obj) {
     s_elem.Cost = cost
   });
 
-  temp_Cars.forEach(c_elem => {
-    temp_sSheet.forEach(s_elem => {
-      if (c_elem.CarID == s_elem.ServToCar) {
-        c_elem.ServiceSheet.push(s_elem)
-      }
-    });
-  });
+  compareID(temp_Cars,temp_sSheet,'ServiceSheet','CarID','ServToCar');
 
-  temp_Owners.forEach(o_elem => {
-    temp_Cars.forEach(c_elem => {
-      if (o_elem.ownerID == c_elem.CarToOwner) {
-        o_elem.Cars.push(c_elem);
-      }
-    })
-  })
+  compareID(temp_Owners,temp_Cars,'Cars','ownerID','CarToOwner');
 
   this.owner = function () {
     return temp_Owners

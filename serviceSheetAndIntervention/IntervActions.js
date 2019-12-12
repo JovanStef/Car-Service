@@ -27,7 +27,7 @@ addNewInterv = async (req, res) => {
 
 updateInterv = async (req, res) => {
     try {
-        let Interv = await intervQuerys.updateIntervQuery(req.body,req.params.interv);
+        let Interv = await intervQuerys.updateIntervQuery(req.body,req.params.intervID);
         res.status(201).send('Intervention updated!');
     }
     catch (error) {
