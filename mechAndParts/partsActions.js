@@ -1,11 +1,13 @@
 const partsQuerys = require('./partsQueries');
-const helpers = require('../helpers');
+const {allData} = require('../helpers');
 
 
 getAllParts =async(req,res)=>{
     try{
         let allParts = await partsQuerys.getAllPartsQuery();
-        res.status(200).send(allParts);
+        let data = new allData(allParts);
+        data = data.part();
+        res.status(200).send(data);
     }
     catch (error){
         res.status(500).send(error.message);

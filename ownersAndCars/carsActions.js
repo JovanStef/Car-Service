@@ -1,10 +1,13 @@
 const carsQuerys = require('./carsQueries');
-const {Owner,Car} = require('../models')
+const {allData,responseError,logginRoleDesc} = require('../helpers');
+
 
 getAllCars =async(req,res)=>{
     try{
         let allCars = await carsQuerys.getAllCarsQuery();
-        res.status(200).send(allCars);
+        let data = new allData(allCars);
+        data = data.car();
+        res.status(200).send(data);
     }
     catch (error){
         res.status(500).send(error.message);

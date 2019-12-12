@@ -70,6 +70,9 @@ function allData(obj) {
   this.owner = function () {
     return temp_Owners
   };
+  this.car = function () {
+    return temp_Cars
+  };
   this.serviceS = function () {
     return temp_sSheet
   };

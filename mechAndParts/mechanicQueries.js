@@ -1,7 +1,7 @@
 const connectDB = require('../database');
 
 getAllMechanicsQuery = () => {
-    const query = 'SELECT *FROM mechanic';
+    const query = ' SELECT *FROM mechanic INNER JOIN parts ON parts.Part_toInter_ID=mechanic.Mech_toInter_ID;';
     return new Promise((resolve, reject) => {
         connectDB.query(query, (error, results, fields) => {
             if (error) {

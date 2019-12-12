@@ -1,7 +1,9 @@
 const connectDB = require('../database');
 
 getAllServShQuery = ()=>{
-    const query = 'SELECT *FROM service_sheet';
+    const query = 'SELECT *FROM service_sheet JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID \
+    INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID \
+    INNER JOIN mechanic ON intervention.Inter_ID=mechanic.Mech_toInter_ID;';
     return new Promise ((resolve,reject)=>{
         connectDB.query(query,(error,results,fields)=>{
             if (error) {

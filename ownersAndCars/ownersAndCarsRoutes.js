@@ -17,8 +17,8 @@ routes.post('/owners/new',[middleware.logger,middleware.checkToken,middleware.ve
 routes.post('/admin/owners/data',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],ownerActions.softDeleteAllDataForOwnerID,middleware.redirectFunc);
 
 
-routes.get('/cars',carActions.getAllCars);
-routes.post('/cars',carActions.addNewCar);
+routes.get('/cars',[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],carActions.getAllCars);
+routes.post('/cars',[[middleware.logger,middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator]],carActions.addNewCar);
 
 
 module.exports = routes

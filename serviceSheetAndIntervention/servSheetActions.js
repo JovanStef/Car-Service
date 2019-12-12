@@ -4,7 +4,9 @@ const {allData} = require('../helpers');
 getAllServSh = async (req, res) => {
     try {
         let allServSh = await servShQuerys.getAllServShQuery();
-        res.status(200).send(allServSh);
+        let data = new allData(allServSh);
+        data = data.serviceS();
+        res.status(200).send(data);
     }
     catch (error) {
         res.status(500).send(error.message);

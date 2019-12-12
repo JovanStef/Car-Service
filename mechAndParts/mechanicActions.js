@@ -1,9 +1,12 @@
 const mechQuerys = require('./mechanicQueries');
+const {allData} = require('../helpers');
 
 getAllMechanics =async(req,res)=>{
     try{
         let allMech = await mechQuerys.getAllMechanicsQuery();
-        res.status(200).send(allMech);
+        let data = new allData(allMech);
+        data = data.mechanic();
+        res.status(200).send(data);
     }
     catch (error){
         res.status(500).send(error.message);
