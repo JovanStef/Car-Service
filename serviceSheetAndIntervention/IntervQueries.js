@@ -17,9 +17,9 @@ getAllIntervQuery = ()=>{
 };
 
 addNewIntervQuery = (request) => {
-    const query = "INSERT INTO intervention (Inter_Type,Inter_Hours,Inter_toServiceS_ID)VALUES (?,?,?);";
+    const query = "INSERT INTO intervention (Inter_Type,Inter_Hours,Inter_toServiceS_ID,Inter_delete,description,interv_cost)VALUES (?,?,?,0,?,?);";
     return new Promise((resolve, reject) => {
-        connectDB.query(query, [request.Inter_Type, request.Inter_Hours, request.Inter_toServiceS_ID], (error, results, fields) => {
+        connectDB.query(query, [request.Inter_Type, request.Inter_Hours, request.Inter_toServiceS_ID,request.description,request.interv_cost], (error, results, fields) => {
             if (error) {
                 reject(error);
             }

@@ -19,7 +19,7 @@ getAllCarsQuery = ()=>{
 };
 
 addNewCarQuery = (request) => {
-    const query = "INSERT INTO car (Make,Model,Year,Car_toOwner_ID)VALUES (?,?,?,?);";
+    const query = "INSERT INTO car (Make,Model,Year,Car_toOwner_ID,Car_delete)VALUES (?,?,?,?,0);";
     return new Promise((resolve, reject) => {
         connectDB.query(query, [request.Make, request.Model, request.Year, request.Car_toOwner_ID], (error, results, fields) => {
             if (error) {

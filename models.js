@@ -28,6 +28,8 @@ class ServiceSheet {
         this.ServToCar = obj.Service_toCar_ID;
         this.Cost = 0;
         this.AssessmentFee = obj.assessment_fee;
+        this.Confirmed = obj.confirmed;
+        this.Paid = obj.paid;
         this.Deleted=obj.Service_S_delete;
         this.Intreventions=[];
     };

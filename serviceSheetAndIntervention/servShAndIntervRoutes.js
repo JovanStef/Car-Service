@@ -17,6 +17,6 @@ routes.patch('/interv/:intervID',[middleware.checkToken,middleware.verifyToken,m
 routes.get('/serv-sh',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],servShActions.getAllServSh);
 routes.get('/serv-sh/:sSnum',[middleware.logger,middleware.checkToken,middleware.verifyToken],servShActions.getServShbySnum);
 routes.post('/serv-sh',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],servShActions.addNewServSh);
-routes.patch('/serv-sh/:cost',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],servShActions.updateServSh);
-
+routes.patch('/serv-sh/confirmed/:serial',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOwner],servShActions.confirmServSh);
+routes.patch('/serv-sh/paid/:serial',[middleware.checkToken,middleware.verifyToken,middleware.checkRoleOperator],servShActions.paidServSh);
 module.exports = routes

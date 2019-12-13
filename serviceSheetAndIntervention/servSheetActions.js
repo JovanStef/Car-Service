@@ -45,18 +45,41 @@ addNewServSh = async (req, res) => {
     }
 };
 
-updateServSh = async (req, res) => {
+confirmServSh = async (req, res) => {
+    let confirmed = (req.body.confirmed ==1)? "Confirmed." : "To be confirmed."
     try {
-        let ServSh = await servShQuerys.updateServShQuery(req.params.cost,req.body);
-        let resErr = responseError(ServSh, `Service sheet with ID ${req.body.id} does not exist`)
+        if(req.body.confirmed > 1){
+            res.status(401).send(`Value for "confirmed" must be 0 or 1.`);
+        } 
+        let ServSh = await servShQuerys.confirmServShQuery(req.params.serial,req.body);
+        let resErr = responseError(ServSh, `Service sheet with serial number ${req.params.serial} does not exist`)
         if (resErr) {
             res.status(401).send(resErr);
         }
          else {
-            
-             res.status(200).send(`Service sheet with ID ${req.body.id} updated!`);
+             res.status(200).send(`Service sheet with serial number ${req.params.serial} set to "${confirmed}"`);
         }
+    }
+    catch (error) {
+        res.status(500).send(error.message);
 
+    }
+};
+
+paidServSh = async (req, res) => {
+    let paid = (req.body.paid ==1)? "Paid." : "To be paid."
+    try {
+        if(req.body.confirmed > 1){
+            res.status(401).send(`Value for "paid" must be 0 or 1.`);
+        } 
+        let ServSh = await servShQuerys.paidServShQuery(req.params.serial,req.body);
+        let resErr = responseError(ServSh, `Service sheet with serial number ${req.params.serial} does not exist`)
+        if (resErr) {
+            res.status(401).send(resErr);
+        }
+         else {
+             res.status(200).send(`Service sheet with serial number ${req.params.serial} set to "${paid}"`);
+        }
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -67,7 +90,7 @@ updateServSh = async (req, res) => {
 module.exports = {
     getAllServSh,
     addNewServSh,
-    updateServSh,
+    confirmServSh,
+    paidServSh,
     getServShbySnum
-
 }
