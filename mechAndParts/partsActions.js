@@ -1,5 +1,5 @@
 const partsQuerys = require('./partsQueries');
-const {allData} = require('../helpers');
+const {allData,responseError} = require('../helpers');
 
 
 getAllParts =async(req,res)=>{

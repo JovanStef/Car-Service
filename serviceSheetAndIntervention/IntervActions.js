@@ -1,5 +1,5 @@
 const intervQuerys = require('./IntervQueries');
-const {allData} = require('../helpers')
+const {allData,responseError} = require('../helpers')
 
 getAllInterv = async (req, res) => {
     try {
@@ -18,7 +18,7 @@ addNewInterv = async (req, res) => {
     try {
         let newInterv = await intervQuerys.addNewIntervQuery(req.body);
         res.status(200).send('New intervention added!');
-        // }
+        
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -44,7 +44,7 @@ softDeleteInterv = async(req,res)=>{
             res.status(401).send(`Value for "deleted" must be 0 or 1.`);
         } 
         let interv = await intervQuerys.softDeleteIntervQuery(req.body.interv_ID,req.body.deleted);
-        let resErr = helpers.responseError(interv, `Intervention with ID ${req.body.interv_ID} does not exist`)
+        let resErr = responseError(interv, `Intervention with ID ${req.body.interv_ID} does not exist`)
         if (resErr) {
             res.status(401).send(resErr);
         }

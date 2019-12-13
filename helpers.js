@@ -1,8 +1,8 @@
 var jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const {Owner,Car,ServiceSheet,Intervention,Mechanic,Part}=require('./models');
+const { Owner, Car, ServiceSheet, Intervention, Mechanic, Part } = require('./models');
 
-compareID=(arr1,arr2,arr3,id1,id2)=>{
+compareID = (arr1, arr2, arr3, id1, id2) => {
   arr1.forEach(m_elem => {
     arr2.forEach(p_elem => {
       if (m_elem[id1] == p_elem[id2]) {
@@ -30,13 +30,13 @@ function allData(obj) {
     let S_temp = new ServiceSheet(elem)
     temp_sSheet.push(S_temp);
 
-    let I_temp= new Intervention(elem)
+    let I_temp = new Intervention(elem)
     temp_Interv.push(I_temp);
 
     let M_temp = new Mechanic(elem)
     temp_Mech.push(M_temp);
 
-   let P_temp = new Part(elem)
+    let P_temp = new Part(elem)
     temp_Parts.push(P_temp)
 
   });
@@ -48,24 +48,26 @@ function allData(obj) {
   temp_Mech = temp_Mech.filter((elem, index, self) => index === self.findIndex((i) => (i.MechanicID === elem.MechanicID)));
   temp_Parts = temp_Parts.filter((elem, index, self) => index === self.findIndex((i) => (i.PartID === elem.PartID)));
 
-  compareID(temp_Mech,temp_Parts,'Parts','MechToInterv','toInterv_ID');
+  compareID(temp_Mech, temp_Parts, 'Parts', 'MechToInterv', 'toInterv_ID');
 
-  compareID(temp_Interv,temp_Mech,'Mechanics','InterventionID','MechToInterv');
+  compareID(temp_Interv, temp_Mech, 'Mechanics', 'InterventionID', 'MechToInterv');
 
   temp_sSheet.forEach(s_elem => {
     let cost = 0;
     temp_Interv.forEach(i_elem => {
       if (s_elem.SheetID == i_elem.IntervToServ) {
-        cost += i_elem.InterventionCost
         s_elem.Intreventions.push(i_elem)
+        if (i_elem.Deleted == 0) {
+          cost += i_elem.InterventionCost
+        }
       }
     })
     s_elem.Cost = cost
   });
 
-  compareID(temp_Cars,temp_sSheet,'ServiceSheet','CarID','ServToCar');
+  compareID(temp_Cars, temp_sSheet, 'ServiceSheet', 'CarID', 'ServToCar');
 
-  compareID(temp_Owners,temp_Cars,'Cars','ownerID','CarToOwner');
+  compareID(temp_Owners, temp_Cars, 'Cars', 'ownerID', 'CarToOwner');
 
   this.owner = function () {
     return temp_Owners

@@ -1,5 +1,5 @@
 const mechQuerys = require('./mechanicQueries');
-const {allData} = require('../helpers');
+const {allData,responseError} = require('../helpers');
 
 getAllMechanics =async(req,res)=>{
     try{
