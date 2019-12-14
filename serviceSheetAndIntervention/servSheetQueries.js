@@ -1,4 +1,17 @@
 const connectDB = require('../database');
+getOnlyAllServShQuery = ()=>{
+    const query = 'SELECT *FROM service_sheet;';
+    return new Promise ((resolve,reject)=>{
+        connectDB.query(query,(error,results,fields)=>{
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+};
 
 getAllServShQuery = ()=>{
     const query = 'SELECT *FROM service_sheet JOIN intervention ON service_sheet.Service_S_ID=intervention.Inter_toServiceS_ID \
@@ -78,6 +91,7 @@ paidServShQuery = (sSerial,request) => {
     });
 };
 module.exports={
+    getOnlyAllServShQuery,
     getAllServShQuery,
     addNewServShQuery,
     confirmServShQuery,

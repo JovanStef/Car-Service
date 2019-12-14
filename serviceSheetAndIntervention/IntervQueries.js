@@ -1,5 +1,19 @@
 const connectDB = require('../database');
 
+getOnlyAllIntervQuery = ()=>{
+    const query = 'SELECT *FROM intervention;';
+    return new Promise ((resolve,reject)=>{
+        connectDB.query(query,(error,results,fields)=>{
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+};
+
 getAllIntervQuery = ()=>{
     const query = 'SELECT *FROM intervention\
     INNER JOIN parts ON intervention.Inter_ID=parts.Part_toInter_ID\
@@ -65,6 +79,7 @@ softDeleteIntervQuery = (id,deleted)=>{
     });
     };
 module.exports={
+    getOnlyAllIntervQuery,
     getAllIntervQuery,
     addNewIntervQuery,
     updateIntervQuery,

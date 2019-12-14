@@ -1,6 +1,19 @@
 const mechQuerys = require('./mechanicQueries');
 const {allData,responseError} = require('../helpers');
 
+getOnlyAllMechanics =async(req,res)=>{
+    try{
+        let allMech = await mechQuerys.getOnlyAllMechanicsQuery();
+        let data = new allData(allMech);
+        data = data.mechanic();
+        res.status(200).send(data);
+    }
+    catch (error){
+        res.status(500).send(error.message);
+
+    }
+};
+
 getAllMechanics =async(req,res)=>{
     try{
         let allMech = await mechQuerys.getAllMechanicsQuery();
@@ -26,6 +39,7 @@ addNewMech =async(req,res)=>{
 };
 
 module.exports = {
+    getOnlyAllMechanics,
     getAllMechanics,
     addNewMech
 

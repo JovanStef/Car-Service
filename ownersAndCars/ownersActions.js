@@ -1,8 +1,22 @@
 const ownersQuerys = require('./ownersQueries');
 const operatorQuerys = require('../operators/operatorQueries');
-const bcrypt = require('bcryptjs')
+const bcrypt = require('bcryptjs');
+const {Owner}=require('../models')
 const {allData,responseError,logginRoleDesc} = require('../helpers');
 var jwt = require('jsonwebtoken');
+
+getAllOwners = async (req, res) => {
+    try {
+        let owner = await ownersQuerys.getAllOwnersQuery();
+     let data = new allData(owner);
+        data = data.owner();
+        res.status(200).send(data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+
+    }
+};
 
 getAllOwnersAndTheirCars = async (req, res) => {
     try {
@@ -126,6 +140,7 @@ login = async (req, res) => {
 }
 
 module.exports = {
+    getAllOwners,
     getOwnersByEmail,
     addNewOwner,
     getAllDataForOwnerID,

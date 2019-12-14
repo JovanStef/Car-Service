@@ -1,6 +1,17 @@
 const carsQuerys = require('./carsQueries');
 const {allData,responseError,logginRoleDesc} = require('../helpers');
+getOnlyAllCars =async(req,res)=>{
+    try{
+        let allCars = await carsQuerys.getOnlyAllCarsQuery();
+        let data = new allData(allCars);
+        data = data.car();
+        res.status(200).send(data);
+    }
+    catch (error){
+        res.status(500).send(error.message);
 
+    }
+};
 
 getAllCars =async(req,res)=>{
     try{
@@ -27,6 +38,7 @@ addNewCar =async(req,res)=>{
 };
 
 module.exports = {
+    getOnlyAllCars,
     getAllCars,
     addNewCar
 

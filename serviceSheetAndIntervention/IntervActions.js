@@ -1,5 +1,17 @@
 const intervQuerys = require('./IntervQueries');
-const {allData,responseError} = require('../helpers')
+const {allData,responseError} = require('../helpers');
+getOnlyAllInterv = async (req, res) => {
+    try {
+            let allInterv = await intervQuerys.getOnlyAllIntervQuery();
+            let data = new allData(allInterv);
+        data = data.intervention();
+        res.status(200).send(data);        
+    }
+    catch (error) {
+        res.status(500).send(error.message);
+
+    }
+};
 
 getAllInterv = async (req, res) => {
     try {
@@ -58,6 +70,7 @@ softDeleteInterv = async(req,res)=>{
 }
 
 module.exports = {
+    getOnlyAllInterv,
     getAllInterv,
     addNewInterv,
     updateInterv,

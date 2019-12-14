@@ -1,4 +1,17 @@
 const connectDB = require('../database');
+getOnlyAllCarsQuery = ()=>{
+    const query = 'SELECT * FROM car;';
+    return new Promise ((resolve,reject)=>{
+        connectDB.query(query,(error,results,fields)=>{
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+};
 
 getAllCarsQuery = ()=>{
     const query = 'SELECT * FROM car\
@@ -34,6 +47,7 @@ addNewCarQuery = (request) => {
 };
 
 module.exports={
+    getOnlyAllCarsQuery,
     getAllCarsQuery,
     addNewCarQuery
 }

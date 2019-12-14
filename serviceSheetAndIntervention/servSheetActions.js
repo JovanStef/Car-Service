@@ -1,6 +1,17 @@
 const servShQuerys = require('./servSheetQueries');
 const {allData,responseError} = require('../helpers');
+getOnlyAllServSh = async (req, res) => {
+    try {
+        let allServSh = await servShQuerys.getOnlyAllServShQuery();
+        let data = new allData(allServSh);
+        data = data.serviceS();
+        res.status(200).send(data);
+    }
+    catch (error) {
+        res.status(500).send(error.message);
 
+    }
+};
 getAllServSh = async (req, res) => {
     try {
         let allServSh = await servShQuerys.getAllServShQuery();
@@ -88,6 +99,7 @@ paidServSh = async (req, res) => {
 };
 
 module.exports = {
+    getOnlyAllServSh,
     getAllServSh,
     addNewServSh,
     confirmServSh,

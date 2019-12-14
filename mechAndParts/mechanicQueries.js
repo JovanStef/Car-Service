@@ -1,5 +1,19 @@
 const connectDB = require('../database');
 
+getOnlyAllMechanicsQuery = () => {
+    const query = ' SELECT *FROM mechanic ;';
+    return new Promise((resolve, reject) => {
+        connectDB.query(query, (error, results, fields) => {
+            if (error) {
+                reject(error);
+            }
+            else {
+                resolve(results);
+            }
+        });
+    });
+};
+
 getAllMechanicsQuery = () => {
     const query = ' SELECT *FROM mechanic INNER JOIN parts ON parts.Part_toInter_ID=mechanic.Mech_toInter_ID;';
     return new Promise((resolve, reject) => {
@@ -30,6 +44,7 @@ addNewMechQuery = (request) => {
 };
 
 module.exports = {
+    getOnlyAllMechanicsQuery,
     getAllMechanicsQuery,
     addNewMechQuery
 }
