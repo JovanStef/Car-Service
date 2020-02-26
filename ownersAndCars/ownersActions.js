@@ -77,7 +77,7 @@ updatePersonalInfoOwner = async (req, res) => {
     let checkPass = bcrypt.compareSync(owner.old_password, tokenData.user.password)
     owner.new_password = bcrypt.hashSync(owner.new_password, 5);
     if (!checkPass) {
-        res.status(401).send('Please check your old password');
+        res.status(401).send({message:'Please check your old password'});
     } else {
         try {
             let dataOwner = await ownersQuerys.updatePersonalInfoOwnerQuery(owner, tokenData.user);
@@ -100,7 +100,7 @@ addNewOwner = async (req, res) => {
     newOwner.password = bcrypt.hashSync(newOwner.password, 5)
     try {
         let newOwner = await ownersQuerys.addNewOwnerQuery(newOwner);
-        res.status(200).send('New owner added!');
+        res.status(200).send({message:'New owner added!'});
     }
     catch (error) {
         res.status(500).send(error.message);
@@ -115,7 +115,7 @@ softDeleteAllDataForOwnerID = async (req, res) => {
         if (resErr) {
             res.status(401).send(resErr);
         } else {
-            res.status(200).send(`Owner with ID ${req.body.owner_id} new deleted value`);
+            res.status(200).send({message:`Owner with ID ${req.body.owner_id} new deleted value`});
         }
     }
     catch (error) {

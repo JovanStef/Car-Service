@@ -21,13 +21,13 @@ errorHandler = (err, req, res, next) => {
 };
 
 errorWrongRoute = (req, res, next) => {
-    var error = new Error('Route not found!');
+    var error = new Error({message:'Route not found!'});
     error.status = 404;
     next(error);
 };
 emailValidator = (req, res, next) => {
     if (!helpers.emailValidator(req.body.email)) {
-        var error = new Error('Please enter a valid email');
+        var error = new Error({message:'Please enter a valid email'});
         error.status = 404;
         next(error);
     };
@@ -39,7 +39,7 @@ redirectFunc = (req, res, next) => {
 
 keyWord = (req, res, next) => {
     if (!helpers.keyWordValidator(req.body)) {
-        var error = new Error('Wrong value for property "type"');
+        var error = new Error({message:'Wrong value for property "type"'});
         error.status = 404;
         next(error)
     }
@@ -61,7 +61,7 @@ checkToken = (req, res, next) => {
 verifyToken = (req, res,next) => {
     jwt.verify(req.token, 'owner', (err, authorizedData) => {
         if(err){
-            res.status(403).send('Invalid roken');
+            res.status(403).send({message:'Invalid token'});
         } else {
             next()
         }
@@ -71,8 +71,9 @@ verifyToken = (req, res,next) => {
 checkRoleOwner = (req,res,next)=>{
     jwt.verify(req.token, 'owner', (err, authorizedData) => {
         let keyWord = Object.keys(authorizedData.user)[0].split('_');
+        console.log(authorizedData)
     if (keyWord[0] != 'Owner') {
-        res.status(403).send('Owner Authorisation Required');;
+        res.status(403).send({message:'Owner Authorisation Required'});;
     }
     else {
         next();
@@ -84,7 +85,7 @@ checkRoleOperator = (req,res,next)=>{
     jwt.verify(req.token, 'owner', (err, authorizedData) => {
         let keyWord = Object.keys(authorizedData.user)[0].split('_');
     if (keyWord[0] != 'Operator') {
-        res.status(403).send('Operator Authorisation Required');;
+        res.status(403).send({message:'Operator Authorisation Required'});;
     }
     else {
         next();

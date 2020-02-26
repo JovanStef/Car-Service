@@ -126,7 +126,7 @@ keyWordValidator = (obj) => {
 
 responseError = (resVar, message) => {
   if (resVar.affectedRows == 0 || resVar.length == 0) {
-    return message
+    return {message:message}
   }
 
 }
@@ -137,7 +137,7 @@ logginRoleDesc = (user, operator, owner, pass) => {
   } else if (owner.length != 0) {
     user = owner
   } else {
-    var error = new Error("wrong credentials");
+    var error = new Error({message:"wrong credentials"});
     error.status = 404;
     return error.message
   }
@@ -155,7 +155,7 @@ logginRoleDesc = (user, operator, owner, pass) => {
     }
     return userToSend
   } else {
-    return "Wrong password"
+    return {message:"Wrong password"}
 
   }
 }
